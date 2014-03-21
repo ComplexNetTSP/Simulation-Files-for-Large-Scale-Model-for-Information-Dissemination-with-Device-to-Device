@@ -36,7 +36,9 @@ import numpy as np
 simulation_end_time=10.0
 tau = 1.0/30
 filelist=['Results/mult/1', 'Results/mult/2', 'Results/mult/3', 'Results/mult/4',
-  'Results/mult/5', 'Results/mult/6', 'Results/mult/7', 'Results/mult/8', 'Results/mult/9']
+  'Results/mult/5', 'Results/mult/6', 'Results/mult/7', 'Results/mult/8',
+  'Results/mult/9', 'Results/mult/10', 'Results/mult/11', 'Results/mult/12',
+  'Results/mult/13', 'Results/mult/14', 'Results/mult/15', 'Results/mult/16', 'Results/mult/17']
 ###############################################################################
 #
 # End of global definition

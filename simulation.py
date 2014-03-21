@@ -227,7 +227,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     return Sr,Ir,Rr,InfectionMatrix
 
 if __name__ == '__main__':
-    for i in xrange(20):
+    for i in np.arange(16, 301):
         #
         # Variable Init
         #
