@@ -98,16 +98,17 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
                 # Suceptible departing from i to j
                 #print i,j,(rho[i,j]*Sy[i,j])*tau
                 Rate[i,j,0] = min(poisson((rho[i,j]*Sy[i,j])*tau), Sy[i,j])
-                Sy[i,j] -= Rate[i,j,0]
-                Sy[i,i] += Rate[i,j,0]
-
                 # Infected departing from i to j
                 Rate[i,j,2] = min(poisson((rho[i,j]*Iy[i,j])*tau), Iy[i,j])
+                # Recovered departing from i to j
+                Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
+                
+		Sy[i,j] -= Rate[i,j,0]
+                Sy[i,i] += Rate[i,j,0]
+
                 Iy[i,j] -= Rate[i,j,2]
                 Iy[i,i] += Rate[i,j,2]
 
-                # Recovered departing from i to j
-                Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
                 Ry[i,j] -= Rate[i,j,4]
                 Ry[i,i] += Rate[i,j,4]
             else:
@@ -115,14 +116,17 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
                 for jj in xrange(dim):
                     #print i,jj, (sigma[i]*nu[i,jj]*Sy[i,i])*tau, Sy[i,i]
                     Rate[i,jj,5] = min(poisson((sigma[i]*nu[i,jj]*Sy[i,i])*tau), Sy[i,i])
+
+                    Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
+
+                    Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
+                
                     Sy[i,i] -= Rate[i,jj,5]
                     Sy[i,jj] += Rate[i,jj,5]
 
-                    Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
                     Iy[i,i] -= Rate[i,jj,6]
                     Iy[i,jj] += Rate[i,jj,6]
 
-                    Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
                     Ry[i,i] -= Rate[i,jj,7]
                     Ry[i,jj] += Rate[i,jj,7]
 
@@ -133,11 +137,12 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
         for j in xrange(dim):
             # Suceptible becaming infected
             Rate[i,j,1] = min(poisson(((beta[i]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
+            # Infected that recover
+            Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
+            
             Sy[i,j] -= Rate[i,j,1]
             Iy[i,j] += Rate[i,j,1]
 
-            # Infected that recover
-            Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
             Iy[i,j] -= Rate[i,j,3]
             Ry[i,j] += Rate[i,j,3]
 
