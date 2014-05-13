@@ -32,6 +32,8 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 import os
 import pickle as p
 import numpy as np
+import pylab as plt
+import shapefile
 
 from tau_leap import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
@@ -225,7 +227,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     return Sr, Ir, Rr, InfectionMatrix
 
 if __name__ == '__main__':
-    for i in np.arange(16, 301):
+    for i in np.arange(1, 20):
         #
         # Variable Init
         #

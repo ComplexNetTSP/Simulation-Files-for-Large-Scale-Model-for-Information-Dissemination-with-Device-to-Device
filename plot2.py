@@ -33,9 +33,9 @@ import numpy as np
 #
 # Begining of global definition
 #
-simulation_end_time=10.0
+simulation_end_time = 10.0
 tau = 1.0/30
-filelist=['Results/mult/1', 'Results/mult/2', 'Results/mult/3', 'Results/mult/4',
+filelist = ['Results/mult/1', 'Results/mult/2', 'Results/mult/3', 'Results/mult/4',
   'Results/mult/5', 'Results/mult/6', 'Results/mult/7', 'Results/mult/8',
   'Results/mult/9', 'Results/mult/10', 'Results/mult/11', 'Results/mult/12',
   'Results/mult/13', 'Results/mult/14', 'Results/mult/15', 'Results/mult/16', 'Results/mult/17']
@@ -62,11 +62,11 @@ def matplotlib_setup(figsize_x=10, figsize_y=6):
     mpl.rcParams['figure.dpi'] = 300
 
 def plot(I):
-  x = np.arange(0,simulation_end_time,tau)
+  x = np.arange(0, simulation_end_time, tau)
   plt.loglog(x, I, 'r', alpha=0.8)
   plt.xlim((10**(-1), simulation_end_time))
-  plt.xlabel ('Time in days ')
-  plt.ylabel ('Infectious')
+  plt.xlabel('Time in days ')
+  plt.ylabel('Infectious')
   plt.savefig('diffusion1.svg')
   plt.savefig('diffusion1.pdf')
 

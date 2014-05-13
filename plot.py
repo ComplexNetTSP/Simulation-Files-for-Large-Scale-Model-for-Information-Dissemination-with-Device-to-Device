@@ -58,13 +58,13 @@ def matplotlib_setup(figsize_x=10, figsize_y=6):
     # figure dots per inch
     mpl.rcParams['figure.dpi'] = 300
 
-def plot(S,I,R,A):
+def plot(S, I, R, A):
   dim = A.shape[0]
   matplotlib_setup()
-  x = np.arange(0,simulation_end_time,tau)
+  x = np.arange(0, simulation_end_time, tau)
   plt.figure()
   for i in xrange(dim):
-      plt.loglog(x, A[i,:], alpha=0.15)
+      plt.loglog(x, A[i, :], alpha=0.15)
       plt.ylabel('Population')
       plt.xlabel('Time in days')
       plt.xlim((10**(-1), 40))
@@ -79,8 +79,8 @@ def plot(S,I,R,A):
   # plt.subplot(312)
   plt.loglog(x, I, 'r', alpha=0.8)
   plt.xlim((10**(-1), 40))
-  plt.xlabel ('Time in days ')
-  plt.ylabel ('Infectious')
+  plt.xlabel('Time in days ')
+  plt.ylabel('Infectious')
   plt.savefig('diffusion1.svg')
   plt.savefig('diffusion1.pdf')
 
@@ -100,8 +100,8 @@ def load_files(directory):
   with open(directory+'/A.p', 'rb') as fp:
       A = p.load(fp)
 
-  return S,I,R,A
+  return S, I, R, A
 
 if __name__ == '__main__':
-  S,I,R,A = load_files(directory)
-  plot(S,I,R,A)
+  S, I, R, A = load_files(directory)
+  plot(S, I, R, A)
