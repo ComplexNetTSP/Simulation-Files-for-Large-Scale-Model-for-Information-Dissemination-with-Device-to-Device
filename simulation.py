@@ -73,7 +73,7 @@ gamma = 1.0/3.0
 return_rate = 1.0/0.5
 
 # Simulation End Time in Days
-simulation_end_time = 10.0
+simulation_end_time = 60.0
 
 
 ###############################################################################
@@ -201,8 +201,8 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
 
     # Infect some nodes
     initital_infection = 100.0
-    S[59, 59] = S[59, 59]-initital_infection
-    I[59, 59] = initital_infection
+    S[0, 0] = S[0, 0]-initital_infection
+    I[0, 0] = initital_infection
     # Stack the differents S.I.R. variables in one vector
     Y = S.reshape(dim*dim).tolist()
     Y = np.append(Y, I.reshape(dim*dim).tolist())
@@ -227,7 +227,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     return Sr, Ir, Rr, InfectionMatrix
 
 if __name__ == '__main__':
-    for i in np.arange(1, 20):
+    for i in np.arange(60, 62):
         #
         # Variable Init
         #

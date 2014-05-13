@@ -33,9 +33,9 @@ import numpy as np
 #
 # Begining of global definition
 #
-simulation_end_time=50.0
-tau = 1.0/50
-directory='Results/3'
+simulation_end_time = 30.0
+tau = 1.0/60
+directory = 'Results/mult/50'
 ###############################################################################
 #
 # End of global definition
@@ -69,7 +69,7 @@ def plot(S, I, R, A):
       plt.xlabel('Time in days')
       plt.xlim((10**(-1), 40))
   #plt.savefig('diffusion.svg')
-  #plt.savefig('diffusion.pdf')
+  plt.savefig('diffusion.pdf')
 
   plt.figure()
   # plt.subplot(311)
