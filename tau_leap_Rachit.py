@@ -31,7 +31,7 @@ from numpy.random import poisson
 def division_safe(a,b):
     c = np.zeros((a.size,))
     for i in xrange(c.size):
-        if a[i] != 0  and b[i]!= 0.0:
+        if a[i] != 0 and b[i] != 0.0:
             c[i] = a[i]/b[i]
         else:
             c[i] = 0.0
@@ -50,7 +50,7 @@ def population_at_equilibrum(i, sigma, nu, rho, Ni):
     N = np.zeros(dim)
     for j in range(dim):
         if i != j:
-            N[j] = Ni*(sigma[i] * nu[i,j]) / ( rho[i,j] * ( 1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum()))
+            N[j] = Ni*(sigma[i] * nu[i,j]) / (rho[i,j] * (1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum()))
         else:
             N[j] = Ni/(1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum())
     return N
@@ -72,13 +72,14 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
     ES = Y[3].reshape((dim,dim))
     EI = Y[4].reshape((dim,dim))
     ER = Y[5].reshape((dim,dim))
-    Ni = np.sum(S, axis=0) + np.sum(I, axis=0) + np.sum(R, axis=0) +np.sum(ES, axis=0) + np.sum(EI, axis=0) + np.sum(ER, axis=0)
+    Ni = np.sum(S, axis=0) + np.sum(I, axis=0) + np.sum(R, axis=0) + np.sum(ES, axis=0) + np.sum(EI, axis=0) + np.sum(ER, axis=0)
     Sy = S.copy()
     Iy = I.copy()
     Ry = R.copy()
     ESy = ES.copy()
     EIy = EI.copy()
     ERy = ER.copy()
+    #print Ni
     #print Sy
     #
     # SIR Equations
@@ -103,7 +104,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
             if i != j:
                 # Suceptible departing from i to j
                 #print i,j,(rho[i,j]*Sy[i,j])*tau
-                
+
                 Rate[i,j,0] = min(poisson((rho[i,j]*Sy[i,j])*tau), Sy[i,j])
 
                 # Infected departing from i to j
@@ -121,7 +122,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
 
                 # ERecovered departing from i to j
                 Rate[i,j,10] = min(poisson((rho[i,j]*ERy[i,j])*tau), ERy[i,j])
-                
+
                 Sy[i,j] -= Rate[i,j,0]
                 Sy[i,i] += Rate[i,j,0]
 
@@ -136,7 +137,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
 
                 EIy[i,j] -= Rate[i,j,9]
                 EIy[i,i] += Rate[i,j,9]
-               
+
                 ERy[i,j] -= Rate[i,j,10]
                 ERy[i,i] += Rate[i,j,10]
             else:
@@ -146,16 +147,16 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
                     Rate[i,jj,5] = min(poisson((sigma[i]*nu[i,jj]*Sy[i,i])*tau), Sy[i,i])
 
                     Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
-                    
+
                     Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
 
                     #print i,jj, (sigma[i]*nu[i,jj]*Sy[i,i])*tau, Sy[i,i]
                     Rate[i,jj,11] = min(poisson((sigma[i]*nu[i,jj]*ESy[i,i])*tau), ESy[i,i])
 
                     Rate[i,jj,12] = min(poisson((sigma[i]*nu[i,jj]*EIy[i,i])*tau), EIy[i,i])
-                    
+
                     Rate[i,jj,13] = min(poisson((sigma[i]*nu[i,jj]*ERy[i,i])*tau), ERy[i,i])
-                    
+
                     Sy[i,i] -= Rate[i,jj,5]
                     Sy[i,jj] += Rate[i,jj,5]
 
@@ -181,48 +182,38 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
         for j in xrange(dim):
             # Suceptible that become infected
             Rate[i,j,1] = min(poisson(((beta[i]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
-            # Suceptible that become LatentS
-            Rate[i,j,14] = min(poisson(muS*Sy[i,j]*tau), Sy[i,j])
-            # LatentSuceptible that become S
-            Rate[i,j,15] = min(poisson(alphaS*ESy[i,j]*tau), ESy[i,j])
-            # Infected that recover
-            Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
-            # Infected that become LatentI
-            Rate[i,j,16] = min(poisson(muI*Iy[i,j]*tau), Iy[i,j])
-            # LatentI that become I
-            Rate[i,j,17] = min(poisson(alphaI*EIy[i,j]*tau), EIy[i,j])
-            # Recovered that become LatentR
-            Rate[i,j,18] = min(poisson(muR*Ry[i,j]*tau), Ry[i,j])
-            # LatentR that become R
-            Rate[i,j,19] = min(poisson(alphaR*ERy[i,j]*tau), ERy[i,j])
-            # LatentI that become R
-            Rate[i,j,20] = min(poisson(deltaEI*EIy[i,j]*tau), EIy[i,j])
-            
-            
             Sy[i,j] -= Rate[i,j,1]
             Iy[i,j] += Rate[i,j,1]
-
+            # Suceptible that become LatentS
+            Rate[i,j,14] = min(poisson(muS*Sy[i,j]*tau), Sy[i,j])
             Sy[i,j] -= Rate[i,j,14]
             ESy[i,j] += Rate[i,j,14]
-
+            # LatentSuceptible that become S
+            Rate[i,j,15] = min(poisson(alphaS*ESy[i,j]*tau), ESy[i,j])
             ESy[i,j] -= Rate[i,j,15]
             Sy[i,j] += Rate[i,j,15]
-
+            # Infected that recover
+            Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
             Iy[i,j] -= Rate[i,j,3]
             Ry[i,j] += Rate[i,j,3]
-
+            # Infected that become LatentI
+            Rate[i,j,16] = min(poisson(muI*Iy[i,j]*tau), Iy[i,j])
             Iy[i,j] -= Rate[i,j,16]
             EIy[i,j] += Rate[i,j,16]
-
+            # LatentI that become I
+            Rate[i,j,17] = min(poisson(alphaI*EIy[i,j]*tau), EIy[i,j])
             EIy[i,j] -= Rate[i,j,17]
             Iy[i,j] += Rate[i,j,17]
-
+            # Recovered that become LatentR
+            Rate[i,j,18] = min(poisson(muR*Ry[i,j]*tau), Ry[i,j])
             Ry[i,j] -= Rate[i,j,18]
             ERy[i,j] += Rate[i,j,18]
-
+            # LatentR that become R
+            Rate[i,j,19] = min(poisson(alphaR*ERy[i,j]*tau), ERy[i,j])
             ERy[i,j] -= Rate[i,j,19]
             Ry[i,j] += Rate[i,j,19]
-
+            # LatentI that become R
+            Rate[i,j,20] = min(poisson(deltaEI*EIy[i,j]*tau), EIy[i,j])
             EIy[i,j] -= Rate[i,j,20]
             Ry[i,j] += Rate[i,j,20]
 
@@ -232,5 +223,5 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
     Yy = np.append(Yy, ESy.reshape(dim*dim).tolist())
     Yy = np.append(Yy, EIy.reshape(dim*dim).tolist())
     Yy = np.append(Yy, ERy.reshape(dim*dim).tolist())
-    
+
     return Yy

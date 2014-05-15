@@ -31,7 +31,7 @@ from numpy.random import poisson
 def division_safe(a,b):
     c = np.zeros((a.size,))
     for i in xrange(c.size):
-        if a[i] != 0  and b[i]!= 0.0:
+        if a[i] != 0 and b[i] != 0.0:
             c[i] = a[i]/b[i]
         else:
             c[i] = 0.0
@@ -50,7 +50,7 @@ def population_at_equilibrum(i, sigma, nu, rho, Ni):
     N = np.zeros(dim)
     for j in range(dim):
         if i != j:
-            N[j] = Ni*(sigma[i] * nu[i,j]) / ( rho[i,j] * ( 1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum()))
+            N[j] = Ni*(sigma[i] * nu[i,j]) / (rho[i,j] * (1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum()))
         else:
             N[j] = Ni/(1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum())
     return N
@@ -97,18 +97,15 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
             if i != j:
                 # Suceptible departing from i to j
                 #print i,j,(rho[i,j]*Sy[i,j])*tau
-                Rate[i,j,0] = min(poisson((rho[i,j]*Sy[i,j])*tau), Sy[i,j])
+                Rate[i, j, 0] = min(poisson((rho[i,j]*Sy[i, j])*tau), Sy[i,j])
+                Sy[i, j] -= Rate[i,j,0]
+                Sy[i,i] += Rate[i,j, 0]
                 # Infected departing from i to j
                 Rate[i,j,2] = min(poisson((rho[i,j]*Iy[i,j])*tau), Iy[i,j])
-                # Recovered departing from i to j
-                Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
-                
-		Sy[i,j] -= Rate[i,j,0]
-                Sy[i,i] += Rate[i,j,0]
-
                 Iy[i,j] -= Rate[i,j,2]
                 Iy[i,i] += Rate[i,j,2]
-
+                # Recovered departing from i to j
+                Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
                 Ry[i,j] -= Rate[i,j,4]
                 Ry[i,i] += Rate[i,j,4]
             else:
@@ -116,17 +113,14 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
                 for jj in xrange(dim):
                     #print i,jj, (sigma[i]*nu[i,jj]*Sy[i,i])*tau, Sy[i,i]
                     Rate[i,jj,5] = min(poisson((sigma[i]*nu[i,jj]*Sy[i,i])*tau), Sy[i,i])
-
-                    Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
-
-                    Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
-                
                     Sy[i,i] -= Rate[i,jj,5]
                     Sy[i,jj] += Rate[i,jj,5]
 
+                    Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
                     Iy[i,i] -= Rate[i,jj,6]
                     Iy[i,jj] += Rate[i,jj,6]
 
+                    Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
                     Ry[i,i] -= Rate[i,jj,7]
                     Ry[i,jj] += Rate[i,jj,7]
 
@@ -139,7 +133,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
             Rate[i,j,1] = min(poisson(((beta[i]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
             # Infected that recover
             Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
-            
+
             Sy[i,j] -= Rate[i,j,1]
             Iy[i,j] += Rate[i,j,1]
 
