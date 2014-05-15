@@ -35,7 +35,7 @@ import numpy as np
 import pylab as plt
 import shapefile
 
-from tau_leap import population_at_equilibrum, stoc_eqs
+from tau_leap_Rachit import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 ###############################################################################
 # Global Definition
@@ -62,8 +62,8 @@ total_population = 15686986
 
 # Probability of message transimision per contact
 #c=0.8
-c=np.zeros(community)
-for i in range(community):
+c=np.zeros(dim)
+for i in range(dim):
     c[i]=0.8
 
 # Radius of transmision in km
@@ -246,7 +246,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     InfectionMatrix = np.zeros((steps, 255))
     for step in xrange(steps):
         Ytemp = stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI)
-        Ytemp = Ytemp.reshape((3, dim*dim))
+        Ytemp = Ytemp.reshape((6, dim*dim))
         Stemp = Ytemp[0].reshape((dim, dim))
         Itemp = Ytemp[1].reshape((dim, dim))
         Rtemp = Ytemp[2].reshape((dim, dim))
@@ -256,7 +256,9 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
         EStemp = Ytemp[3].reshape((dim,dim))
         EItemp = Ytemp[4].reshape((dim,dim))
         ERtemp = Ytemp[5].reshape((dim,dim))
-        
+        ESr.append(Stemp.sum())
+        EIr.append(Itemp.sum())
+        ERr.append(Rtemp.sum())
         InfectionMatrix[step, :] = Itemp.sum(axis=0)
         Y = Ytemp
         pbar.update(step)
