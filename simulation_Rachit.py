@@ -256,9 +256,9 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
         EStemp = Ytemp[3].reshape((dim,dim))
         EItemp = Ytemp[4].reshape((dim,dim))
         ERtemp = Ytemp[5].reshape((dim,dim))
-        ESr.append(Stemp.sum())
-        EIr.append(Itemp.sum())
-        ERr.append(Rtemp.sum())
+        ESr.append(EStemp.sum())
+        EIr.append(EItemp.sum())
+        ERr.append(ERtemp.sum())
         InfectionMatrix[step, :] = Itemp.sum(axis=0)
         Y = Ytemp
         pbar.update(step)
