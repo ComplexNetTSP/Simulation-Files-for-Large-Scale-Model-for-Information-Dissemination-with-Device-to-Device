@@ -68,7 +68,7 @@ def plot(S, I, R, A):
       plt.ylabel('Population')
       plt.xlabel('Time in days')
       plt.xlim((10**(-1), 40))
-  #plt.savefig('diffusion.svg')
+  plt.savefig('diffusion.svg')
   plt.savefig('diffusion.pdf')
 
   plt.figure()
