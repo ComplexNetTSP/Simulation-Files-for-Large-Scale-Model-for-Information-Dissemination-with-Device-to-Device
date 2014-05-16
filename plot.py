@@ -35,7 +35,7 @@ import numpy as np
 #
 simulation_end_time = 30.0
 tau = 1.0/60
-directory = 'Results/mult/50'
+directory = 'Results/c08_0/0/'
 ###############################################################################
 #
 # End of global definition

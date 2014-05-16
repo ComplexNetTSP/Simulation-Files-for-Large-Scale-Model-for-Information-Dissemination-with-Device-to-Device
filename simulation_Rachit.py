@@ -96,7 +96,7 @@ deltaEI=1.0/6.0
 # End of Global Definition
 #
 
-def save_results(S, I, R, A, directory='Results'):
+def save_results(S, I, R, ES, EI, ER, A, directory='Results'):
     if not os.path.exists(directory):
         os.makedirs(directory)
     with open(directory+'/S.p', 'wb') as fp:
@@ -106,11 +106,11 @@ def save_results(S, I, R, A, directory='Results'):
     with open(directory+'/R.p', 'wb') as fp:
         p.dump(R, fp)
     with open(directory+'/ES.p', 'wb') as fp:
-        p.dump(S, fp)
+        p.dump(ES, fp)
     with open(directory+'/EI.p', 'wb') as fp:
-        p.dump(I, fp)
+        p.dump(EI, fp)
     with open(directory+'/ER.p', 'wb') as fp:
-        p.dump(R, fp)
+        p.dump(ER, fp)
     with open(directory+'/A.p', 'wb') as fp:
         p.dump(A, fp)
 
@@ -296,22 +296,7 @@ if __name__ == '__main__':
                                                total_population,
                                                simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,0)
         A = InfectionMatrix.T
-        save_results(S, I, R, ES,EI,ER,A, 'Results/c08_0/'+str(i))
-##        #
-##        # Simulation community=59
-##        #
-##        S, I, R, ES,EI,ER,InfectionMatrix = run_simumation(N0,
-##                                               dim,
-##                                               tau,
-##                                               beta,
-##                                               sigma,
-##                                               nu,
-##                                               rho,
-##                                               total_population,
-##                                               simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,59)
-##        A = InfectionMatrix.T
-##        save_results(S, I, R, ES,EI,ER,A, 'Results/c08_59/'+str(i))
-
+        save_results(S, I, R, ES, EI, ER, A, 'Results/c08_0/'+str(i))
 
     #####################
     #

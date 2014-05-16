@@ -123,7 +123,6 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
                     Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
                     Ry[i,i] -= Rate[i,jj,7]
                     Ry[i,jj] += Rate[i,jj,7]
-
     #
     # Compute the infection dynamic
     #
@@ -131,15 +130,12 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
         for j in xrange(dim):
             # Suceptible becaming infected
             Rate[i,j,1] = min(poisson(((beta[i]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
-            # Infected that recover
-            Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
-
             Sy[i,j] -= Rate[i,j,1]
             Iy[i,j] += Rate[i,j,1]
-
+            # Infected that recover
+            Rate[i,j,3] = min(poisson((gamma*Iy[i,j])*tau), Iy[i,j])
             Iy[i,j] -= Rate[i,j,3]
             Ry[i,j] += Rate[i,j,3]
-
     Yy = Sy.reshape(dim*dim).tolist()
     Yy = np.append(Yy, Iy.reshape(dim*dim).tolist())
     Yy = np.append(Yy, Ry.reshape(dim*dim).tolist())

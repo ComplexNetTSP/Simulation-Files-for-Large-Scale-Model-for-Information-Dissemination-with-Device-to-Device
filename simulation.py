@@ -201,8 +201,8 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
 
     # Infect some nodes
     initital_infection = 100.0
-    S[0, 0] = S[0, 0]-initital_infection
-    I[0, 0] = initital_infection
+    S[59, 59] = S[59, 59]-initital_infection
+    I[59, 59] = initital_infection
     # Stack the differents S.I.R. variables in one vector
     Y = S.reshape(dim*dim).tolist()
     Y = np.append(Y, I.reshape(dim*dim).tolist())
@@ -227,7 +227,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     return Sr, Ir, Rr, InfectionMatrix
 
 if __name__ == '__main__':
-    for i in np.arange(70, 72):
+    for i in np.arange(60, 61):
         #
         # Variable Init
         #
