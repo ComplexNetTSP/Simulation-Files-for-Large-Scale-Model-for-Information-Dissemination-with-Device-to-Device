@@ -34,6 +34,7 @@ import pickle as p
 import numpy as np
 import pylab as plt
 import shapefile
+import argparse
 
 from tau_leap import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
@@ -54,9 +55,6 @@ subPrefectureNumbering_filename = 'PopulationCensus/subPrefectureNumberingCensus
 # Number of region
 dim = 255
 
-# Simulation Step
-tau = 1.0/30
-
 # Total Population
 total_population = 15686986
 
@@ -71,9 +69,6 @@ gamma = 1.0/3.0
 
 # Return Rate
 return_rate = 1.0/0.5
-
-# Simulation End Time in Days
-simulation_end_time = 60.0
 
 
 ###############################################################################
@@ -227,39 +222,65 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     return Sr, Ir, Rr, InfectionMatrix
 
 if __name__ == '__main__':
-    for i in np.arange(60, 61):
-        #
-        # Variable Init
-        #
-        beta = get_beta(densitySubPrefecture_filename,
-                 polygonPointsSubPrefecture_filename,
-                 subPrefectureNumbering_filename,
-                 r,
-                 c)
-        (nu, sigma) = get_transition_probability(filenameT)
-        rho = rate_of_return(dim, return_rate)
-        N0 = initial_population(areaSubPrefecture_filename,
-                          densitySubPrefecture_filename,
-                          polygonPointsSubPrefecture_filename,
-                          subPrefectureNumbering_filename,
-                          total_population)
+  #
+  # Parse argument
+  #
+  simulation_id=1
+  parser = argparse.ArgumentParser(description='Process SIR simulation with nolatent states.')
+  parser.add_argument('--output', help='output directory', required=True)
+  parser.add_argument('--duration', type=int, help='simulation duration in days', required=True)
+  parser.add_argument('--tau', type=float, help='simulation step (fraction of day)', default=1.0/5)
 
-        #
-        # Simulation
-        #
-        S, I, R, InfectionMatrix = run_simumation(N0,
-                                               dim,
-                                               tau,
-                                               beta,
-                                               sigma,
-                                               nu,
-                                               rho,
-                                               total_population,
-                                               simulation_end_time)
-        A = InfectionMatrix.T
-        save_results(S, I, R, A, 'Results/mult/'+str(i))
+  args = parser.parse_args()
+  # Simualtion parameters
+  simulation_end_time = float(args.duration)
+  # Simulation Step
+  tau = float(args.tau)
+
+  argsdict = vars(args)
+  if args.output:
+    output_dir = argsdict['output']
+    if output_dir.endswith('\\'):
+      output_dir = output_dir[:-1]
+
+    # if output dire doesn' extist create it
+    if not os.path.exists(output_dir):
+      os.makedirs(output_dir)
+
+    #
+    # Start Simulation
+    #
+    beta = get_beta(densitySubPrefecture_filename,
+             polygonPointsSubPrefecture_filename,
+             subPrefectureNumbering_filename,
+             r,
+             c)
+    (nu, sigma) = get_transition_probability(filenameT)
+    rho = rate_of_return(dim, return_rate)
+    N0 = initial_population(areaSubPrefecture_filename,
+                      densitySubPrefecture_filename,
+                      polygonPointsSubPrefecture_filename,
+                      subPrefectureNumbering_filename,
+                      total_population)
+
+    #
+    # Simulation
+    #
+    S, I, R, InfectionMatrix = run_simumation(N0,
+                                           dim,
+                                           tau,
+                                           beta,
+                                           sigma,
+                                           nu,
+                                           rho,
+                                           total_population,
+                                           simulation_end_time)
+    A = InfectionMatrix.T
+    save_results(S, I, R, A, output_dir + '/' +str(simulation_id))
 
     #####################
     #
     # end Simulation
     #
+  else:
+    parser.print_help()

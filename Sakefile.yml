@@ -1,0 +1,97 @@
+---
+# Macros
+#! DURATION=20
+
+latent:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau 0.2
+  output:
+    - ./Results/latent/1/A.p
+    - ./Results/latent/1/I.p
+    - ./Results/latent/1/R.p
+    - ./Results/latent/1/S.p
+    - ./Results/latent/1/EI.p
+    - ./Results/latent/1/ES.p
+    - ./Results/latent/1/ER.p
+
+nolatent:
+  help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation.py
+  formula: >
+    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau 0.2
+  output:
+    - ./Results/nolatent/1/A.p
+    - ./Results/nolatent/1/I.p
+    - ./Results/nolatent/1/R.p
+    - ./Results/nolatent/1/S.p
+
+simplePlotLatent:
+  help: Plot result for one simualtion at a time
+  dependencies:
+    - ./Results/latent/1/I.p
+    - ./Results/latent/1/A.p
+  formula: >
+    python plot.py --input ./Results/latent/1 --output ./Plots/latent
+  output:
+    - ./Plots/latent/diffusion1.pdf
+    - ./Plots/latent/diffusion1.svg
+    - ./Plots/latent/diffusion.svg
+    - ./Plots/latent/diffusion.pdf
+
+simplePlotnoLatent:
+  help: Plot result for one simualtion at a time
+  dependencies:
+    - ./Results/nolatent/1/I.p
+    - ./Results/nolatent/1/A.p
+  formula: >
+    python plot.py --input ./Results/nolatent/1 --output ./Plots/nolatent
+  output:
+    - ./Plots/nolatent/diffusion1.pdf
+    - ./Plots/nolatent/diffusion1.svg
+    - ./Plots/nolatent/diffusion.svg
+    - ./Plots/nolatent/diffusion.pdf
+
+multiplePlot:
+  help: Plot Side by side the simulation results of the latent case and no latent case
+  dependencies:
+    - ./Results/latent/1/I.p
+    - ./Results/latent/1/A.p
+    - ./Results/nolatent/1/A.p
+    - ./Results/nolatent/1/I.p
+    - ./Results/nolatent/1/R.p
+    - ./Results/nolatent/1/S.p
+  formula: >
+    python plot3.py --latent ./Results/latent/1 --nolatent ./Results/nolatent/1 --output ./Plots/multiple
+  output:
+    - ./Plots/multiple/diffusion1.svg
+    - ./Plots/multiple/diffusion1.pdf
+
+cleanlatent:
+  help: clean all the simulation results from the laten simualtion
+  formula: >
+    rm -rf ./Plots/latent/*
+    rm -rf ./Results/latent/*
+
+cleannolatent:
+  help: clean all the simulation results from the laten simualtion
+  formula: >
+
+    rm -rf ./Results/nolatent/*
+
+clearplot:
+  help: remove the plot files
+  formula: >
+    rm -rf ./Plots/nolatent/*
+    rm -rf ./Plots/latent/*
+    rm -rf ./Plots/multiple/*
+
+cleanpy:
+  help: remove *.pyc files
+  dependencies:
+    - ./*.pyc
+  formula: >
+    rm -f *.pyc

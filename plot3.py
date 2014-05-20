@@ -28,6 +28,8 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 import pickle as p
 import pylab as plt
 import numpy as np
+import os
+import argparse
 
 ###############################################################################
 #
@@ -59,39 +61,19 @@ def matplotlib_setup(figsize_x=10, figsize_y=6):
     # figure dots per inch
     mpl.rcParams['figure.dpi'] = 300
 
-def plot(I_1, A_1, I_2, A_2):
+def plot(I_1, A_1, I_2, A_2, out_dir):
   dim = A_1.shape[0]
   matplotlib_setup()
-  x = np.arange(0, simulation_end_time, tau)
-  plt.figure()
-  for i in xrange(dim):
-      plt.loglog(x, A_1[i, :], alpha=0.15)
-      plt.loglog(x, A_2[i, :], alpha=0.15)
-      plt.ylabel('Population')
-      plt.xlabel('Time in days')
-      plt.xlim((10**(-1), 40))
-  plt.savefig('diffusion.svg')
-  plt.savefig('diffusion.pdf')
+  #x = np.arange(0, simulation_end_time, tau)
 
   plt.figure()
-  # plt.subplot(311)
-  # plt.plot(S, 'g')
-  # plt.xlabel ('Time (years)')
-  # plt.ylabel ('Susceptible')
-  # plt.subplot(312)
-  plt.loglog(x, I_1, 'r', alpha=0.8)
-  plt.loglog(x, I_2, 'r', alpha=0.8)
-  plt.xlim((10**(-1), 40))
+  plt.loglog(I_1, 'r', alpha=0.8)
+  plt.loglog(I_2, 'r', alpha=0.8)
+  #plt.xlim((10**(-1), 40))
   plt.xlabel('Time in days ')
   plt.ylabel('Infectious')
-  plt.savefig('diffusion1.svg')
-  plt.savefig('diffusion1.pdf')
-
-  #plt.subplot(313)
-  # plt.plot(R, 'k')
-  # plt.xlabel ('Time (years)')
-  # plt.ylabel ('Recovered')
-  # plt.show()
+  plt.savefig(out_dir + '/diffusion1.svg')
+  plt.savefig(out_dir + '/diffusion1.pdf')
 
 def load_files(directory):
   with open(directory+'/S.p', 'rb') as fp:
@@ -106,6 +88,31 @@ def load_files(directory):
   return S, I, R, A
 
 if __name__ == '__main__':
-  S_R, I_R, I_R, A_R = load_files(directory_R)
-  S_V, I_V, R_V, A_V = load_files(directory_V)
-  plot(I_R, A_R, I_V, A_V)
+  #
+  # Parse argument
+  #
+  parser = argparse.ArgumentParser(description='Process SIR simulation with latent states.')
+  parser.add_argument('--output', help='output directory', required=True)
+  parser.add_argument('--latent', help='directory of the latent simualtion results', required=True)
+  parser.add_argument('--nolatent', help='directory of the nolatent simualtion results', required=True)
+  args = parser.parse_args()
+  argsdict = vars(args)
+  if args.latent and  args.nolatent and args.output:
+    output_dir = argsdict['output']
+    latent = argsdict['latent']
+    nolatent = argsdict['nolatent']
+    # Remove the last backslash of teh sting if exist
+    if output_dir.endswith('\\'):
+      output_dir = output_dir[:-1]
+    # Remove the last backslash of teh sting if exist
+    if latent.endswith('\\'):
+      latent = latent[:-1]
+    # Remove the last backslash of teh sting if exist
+    if nolatent.endswith('\\'):
+      nolatent = nolatent[:-1]
+    # if output dir doesn' extist create it
+    if not os.path.exists(output_dir):
+      os.makedirs(output_dir)
+    S_L, I_L, I_L, A_L = load_files(latent)
+    S_NL, I_NL, R_NL, A_NL = load_files(nolatent)
+    plot(I_L, A_L, I_NL, A_NL, output_dir)

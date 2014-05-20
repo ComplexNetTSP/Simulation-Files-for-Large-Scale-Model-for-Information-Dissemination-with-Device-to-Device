@@ -28,14 +28,15 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 import pickle as p
 import pylab as plt
 import numpy as np
+import os
+import argparse
 
 ###############################################################################
 #
 # Begining of global definition
 #
 simulation_end_time = 30.0
-tau = 1.0/60
-directory = 'Results/c08_0/0/'
+tau = 1.0/5
 ###############################################################################
 #
 # End of global definition
@@ -58,50 +59,56 @@ def matplotlib_setup(figsize_x=10, figsize_y=6):
     # figure dots per inch
     mpl.rcParams['figure.dpi'] = 300
 
-def plot(S, I, R, A):
+def plot(I, A, output_dir):
   dim = A.shape[0]
   matplotlib_setup()
   x = np.arange(0, simulation_end_time, tau)
   plt.figure()
   for i in xrange(dim):
-      plt.loglog(x, A[i, :], alpha=0.15)
+      plt.loglog(A[i, :], alpha=0.15)
       plt.ylabel('Population')
       plt.xlabel('Time in days')
-      plt.xlim((10**(-1), 40))
-  plt.savefig('diffusion.svg')
-  plt.savefig('diffusion.pdf')
+      #plt.xlim((10**(-1), 40))
+  plt.savefig(output_dir + '/diffusion.svg')
+  plt.savefig(output_dir + '/diffusion.pdf')
 
   plt.figure()
-  # plt.subplot(311)
-  # plt.plot(S, 'g')
-  # plt.xlabel ('Time (years)')
-  # plt.ylabel ('Susceptible')
-  # plt.subplot(312)
-  plt.loglog(x, I, 'r', alpha=0.8)
-  plt.xlim((10**(-1), 40))
+  plt.loglog(I, 'r', alpha=0.8)
+  #plt.xlim((10**(-1), 40))
   plt.xlabel('Time in days ')
   plt.ylabel('Infectious')
-  plt.savefig('diffusion1.svg')
-  plt.savefig('diffusion1.pdf')
-
-  #plt.subplot(313)
-  # plt.plot(R, 'k')
-  # plt.xlabel ('Time (years)')
-  # plt.ylabel ('Recovered')
-  # plt.show()
+  plt.savefig(output_dir + '/diffusion1.svg')
+  plt.savefig(output_dir + '/diffusion1.pdf')
 
 def load_files(directory):
-  with open(directory+'/S.p', 'rb') as fp:
-      S = p.load(fp)
   with open(directory+'/I.p', 'rb') as fp:
       I = p.load(fp)
-  with open(directory+'/R.p', 'rb') as fp:
-      R = p.load(fp)
   with open(directory+'/A.p', 'rb') as fp:
       A = p.load(fp)
-
-  return S, I, R, A
+  return I, A
 
 if __name__ == '__main__':
-  S, I, R, A = load_files(directory)
-  plot(S, I, R, A)
+  #
+  # Parse argument
+  #
+  parser = argparse.ArgumentParser(description='Process SIR simulation with latent states.')
+  parser.add_argument('--output', help='output directory', required=True)
+  parser.add_argument('--input', help='input directory', required=True)
+  args = parser.parse_args()
+  argsdict = vars(args)
+  if args.output and args.input:
+    output_dir = argsdict['output']
+    input_dir = argsdict['input']
+    # Remove the last backslash of teh sting if exist
+    if output_dir.endswith('\\'):
+      output_dir = output_dir[:-1]
+    # Remove the last backslash of teh sting if exist
+    if input_dir.endswith('\\'):
+      input_dir = input_dir[:-1]
+
+    # if output dir doesn' extist create it
+    if not os.path.exists(output_dir):
+      os.makedirs(output_dir)
+
+  I, A = load_files(input_dir)
+  plot(I, A, output_dir)
