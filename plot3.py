@@ -33,14 +33,6 @@ import argparse
 
 ###############################################################################
 #
-# Begining of global definition
-#
-simulation_end_time = 30.0
-tau = 1.0/60
-directory_R = 'Results/c08_0/0/'
-directory_V = 'Results/mult/50'
-###############################################################################
-#
 # End of global definition
 #
 
@@ -64,12 +56,9 @@ def matplotlib_setup(figsize_x=10, figsize_y=6):
 def plot(I_1, A_1, I_2, A_2, out_dir):
   dim = A_1.shape[0]
   matplotlib_setup()
-  #x = np.arange(0, simulation_end_time, tau)
-
   plt.figure()
   plt.loglog(I_1, 'r', alpha=0.8)
   plt.loglog(I_2, 'r', alpha=0.8)
-  #plt.xlim((10**(-1), 40))
   plt.xlabel('Time in days ')
   plt.ylabel('Infectious')
   plt.savefig(out_dir + '/diffusion1.svg')
@@ -113,6 +102,6 @@ if __name__ == '__main__':
     # if output dir doesn' extist create it
     if not os.path.exists(output_dir):
       os.makedirs(output_dir)
-    S_L, I_L, I_L, A_L = load_files(latent)
+    S_L, I_L, R_L, A_L = load_files(latent)
     S_NL, I_NL, R_NL, A_NL = load_files(nolatent)
     plot(I_L, A_L, I_NL, A_NL, output_dir)

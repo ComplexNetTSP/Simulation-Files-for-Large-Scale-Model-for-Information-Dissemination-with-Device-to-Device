@@ -1,13 +1,14 @@
 ---
 # Macros
-#! DURATION=20
+#! DURATION=80
+#! TAU=0.2
 
 latent:
   help: run the SIR simulation with latent states (Gillespie Tau-leap method)
   dependencies:
     - ./simulation_latent.py
   formula: >
-    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau 0.2
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU
   output:
     - ./Results/latent/1/A.p
     - ./Results/latent/1/I.p
@@ -22,7 +23,7 @@ nolatent:
   dependencies:
     - ./simulation.py
   formula: >
-    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau 0.2
+    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau $TAU
   output:
     - ./Results/nolatent/1/A.p
     - ./Results/nolatent/1/I.p
