@@ -74,21 +74,19 @@ gamma = 1.0/3.0
 return_rate = 1.0/0.5
 
 # Simulation End Time in Days
-#simulation_end_time = 60.0
-
 
 # alphaS, alphaI, alphaR
-alphaS = 0.1 #1.0/0.5
-alphaI = 0.1 #1.0/0.5
-alphaR = 0.1 #1.0/0.5
+alphaS = 1./0.5 #1.0/0.5
+alphaI = 1./0.5 #1.0/0.5
+alphaR = 1./0.5 #1.0/0.5
 
 # muS, muI, muR
-muS = 1.0/0.5 #1.0/0.5
-muI = 1.0/0.5 #1.0/0.5
-muR = 1.0/0.5 #1.0/0.5
+muS = 1.0/10.0 #1.0/0.5
+muI = 1.0/10.0 #1.0/0.5
+muR = 1.0/10.0 #1.0/0.5
 
 #EI to R
-deltaEI = 0.0 #1.0/3.0
+deltaEI = gamma #1.0/3.0
 
 ###############################################################################
 # End of Global Definition

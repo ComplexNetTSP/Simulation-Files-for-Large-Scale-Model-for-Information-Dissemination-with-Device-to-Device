@@ -77,12 +77,16 @@ cleanlatent:
     rm -rf ./Results/latent/*
 
 cleannolatent:
-  help: clean all the simulation results from the laten simualtion
+  help: clean all the simulation results from the simualtion without latent states
   formula: >
-
     rm -rf ./Results/nolatent/*
 
-clearplot:
+cleanplotlatent:
+  help: clean all the simulation results from the simualtion with latent states
+  formula: >
+    rm -rf ./Plots/latent/*
+
+cleanplot:
   help: remove the plot files
   formula: >
     rm -rf ./Plots/nolatent/*

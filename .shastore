@@ -1,25 +1,25 @@
 ---
-Plots/latent/diffusion1.svg: 9a78a30adf9f08dc29e7dbe777db9ae6db6b5649
-simulation_latent.py: 6d7cdfdbaad52c917a562d78f06f5ec5c8686e2b
-Results/latent/1/I.p: ea4705bbddd48ddf89fd0c26b6f2428286731c60
+Plots/latent/diffusion1.svg: 74088a43e47d3765a0867f0adca253f0ef36d89e
+simulation_latent.py: 6b4dd28e22c1d046497f0adac2fd5d231ebb2a4c
+Results/latent/1/I.p: f6e5d603e508428707e40b069653a1d5c2799690
 simulation.py: 78269dfc04ca455459b9c5a74fdd33bfaf983e3a
 Plots/multiple/diffusion1.svg: 54646a6ab9b89ae2ede308295dabfdb782333990
-Results/latent/1/ES.p: a1316bd549d6e353e7d7c56e9f1fdc773d740d87
+Results/latent/1/ES.p: d0f80d6d4bf5317e4ee370a99fac1dfe35a21040
 Results/nolatent/1/R.p: ad844bef3113d49aed7f79a912d51e541a84869e
-Plots/latent/diffusion.svg: f51d4eb0a77d33c1d8841149affb214cbcd4af37
+Plots/latent/diffusion.svg: 7d4a5172f766ad7d0a991f4a985450a28ad69223
 Results/nolatent/1/S.p: 84eb97b80ae9e92e1e8e249193a145b083908e74
-Plots/latent/diffusion.pdf: b09056e5aca37519f597a800fbe39b5a78bcb661
-Results/latent/1/EI.p: 8eb3ec6cd85e008c46a7ae8414adb70268edbe63
-Plots/latent/diffusion1.pdf: 758c34e56c7bc83713837e1bc4436e8185d52d83
+Plots/latent/diffusion.pdf: a07f2466d97571c9dac93e1a598be565fa5fb2b5
+Results/latent/1/EI.p: a275bcf7cd43b13879cc45b5069e89476c94e459
+Plots/latent/diffusion1.pdf: 374a4e881a5a5cce6e10a31136d2a86f8941bd99
 Results/nolatent/1/A.p: 391fedba3d5659578576231ab8275aaf34a1e5eb
 Plots/nolatent/diffusion1.svg: 54bd3ca90c7ee71ea4ce34abc0ba3ac77b5e0ea9
 Plots/nolatent/diffusion.svg: 8311a3a34edbb35b43d0ba62d686ba0c80cdd1fb
 Plots/multiple/diffusion1.pdf: 4e7483d18a0a2101b95b67551b1c575edfff8c10
 Plots/nolatent/diffusion.pdf: 4e8de9548f4eebb4913b6e45a65365e5d669375d
-Results/latent/1/R.p: 717ca4b71fd9ec057bc9fe41fb3cb20edb4dd650
-Results/latent/1/A.p: bd69826a7631f250a4c50fd77a5eb3f9e8c6d998
-Results/latent/1/S.p: a400d9d5bdd729e4f3a53d506cf6f3732b5758d2
-Results/latent/1/ER.p: 090aad22838a1c6986a3c6bb7277770be5d67a99
+Results/latent/1/R.p: 268dd89b5ce7f134676a40890acbd8c97baa5130
+Results/latent/1/A.p: 5e4053e5475efa94ba331bbb47b3e82a9ed7fe3d
+Results/latent/1/S.p: ff654580d24cc9d390fbf98ec8875e350c797352
+Results/latent/1/ER.p: 4befd3e8342b68289ec60b7938809dc682ff94d6
 Plots/nolatent/diffusion1.pdf: be6284251fcb91522d1322d3b93d44cec1b5bd70
 Results/nolatent/1/I.p: eb5f6f38a96c14458e7d66e742c0c4fbc95cb687
 ...
