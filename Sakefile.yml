@@ -95,7 +95,6 @@ cleanplot:
 
 cleanpy:
   help: remove *.pyc files
-  dependencies:
-    - ./*.pyc
   formula: >
     rm -f *.pyc
+    find . -name .DS_Store -exec rm -rf {} \;
