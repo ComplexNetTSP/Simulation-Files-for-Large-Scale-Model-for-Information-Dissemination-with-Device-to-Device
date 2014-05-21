@@ -53,7 +53,7 @@ def matplotlib_setup(figsize_x=10, figsize_y=6):
     # figure dots per inch
     mpl.rcParams['figure.dpi'] = 300
 
-def plot(I_1, A_1, I_2, A_2, out_dir):
+def plot(I_1, A_1, I_2, A_2, tau, duration, out_dir):
   dim = A_1.shape[0]
   matplotlib_setup()
   plt.figure()
@@ -84,12 +84,17 @@ if __name__ == '__main__':
   parser.add_argument('--output', help='output directory', required=True)
   parser.add_argument('--latent', help='directory of the latent simualtion results', required=True)
   parser.add_argument('--nolatent', help='directory of the nolatent simualtion results', required=True)
+  parser.add_argument('--tau', type=float, help='simulation steps', required=True)
+  parser.add_argument('--duration', type=int, help='simulation duration', required=True)
   args = parser.parse_args()
   argsdict = vars(args)
-  if args.latent and  args.nolatent and args.output:
+
+  if args.latent and  args.nolatent and args.output and args.tau and args.duration:
     output_dir = argsdict['output']
     latent = argsdict['latent']
     nolatent = argsdict['nolatent']
+    duration = argsdict['duration']
+    tau = argsdict['tau']
     # Remove the last backslash of teh sting if exist
     if output_dir.endswith('\\'):
       output_dir = output_dir[:-1]
@@ -104,4 +109,4 @@ if __name__ == '__main__':
       os.makedirs(output_dir)
     S_L, I_L, R_L, A_L = load_files(latent)
     S_NL, I_NL, R_NL, A_NL = load_files(nolatent)
-    plot(I_L, A_L, I_NL, A_NL, output_dir)
+    plot(I_L, A_L, I_NL, A_NL, tau, duration, output_dir)

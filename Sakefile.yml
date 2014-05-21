@@ -3,6 +3,9 @@
 #! DURATION=80
 #! TAU=0.2
 
+#
+# Simulations
+#
 latent:
   help: run the SIR simulation with latent states (Gillespie Tau-leap method)
   dependencies:
@@ -30,7 +33,26 @@ nolatent:
     - ./Results/nolatent/1/R.p
     - ./Results/nolatent/1/S.p
 
-simplePlotLatent:
+
+#
+# Plot
+#
+multipleplot:
+  help: Plot Side by side the simulation results of the latent case and no latent case
+  dependencies:
+    - ./Results/latent/1/I.p
+    - ./Results/latent/1/A.p
+    - ./Results/nolatent/1/A.p
+    - ./Results/nolatent/1/I.p
+    - ./Results/nolatent/1/R.p
+    - ./Results/nolatent/1/S.p
+  formula: >
+    python plot3.py --latent ./Results/latent/1 --nolatent ./Results/nolatent/1 --output ./Plots/multiple --tau $TAU --duration $DURATION
+  output:
+    - ./Plots/multiple/diffusion1.svg
+    - ./Plots/multiple/diffusion1.pdf
+
+latentplot:
   help: Plot result for one simualtion at a time
   dependencies:
     - ./Results/latent/1/I.p
@@ -43,7 +65,7 @@ simplePlotLatent:
     - ./Plots/latent/diffusion.svg
     - ./Plots/latent/diffusion.pdf
 
-simplePlotnoLatent:
+noLatentplot:
   help: Plot result for one simualtion at a time
   dependencies:
     - ./Results/nolatent/1/I.p
@@ -56,23 +78,12 @@ simplePlotnoLatent:
     - ./Plots/nolatent/diffusion.svg
     - ./Plots/nolatent/diffusion.pdf
 
-multiplePlot:
-  help: Plot Side by side the simulation results of the latent case and no latent case
-  dependencies:
-    - ./Results/latent/1/I.p
-    - ./Results/latent/1/A.p
-    - ./Results/nolatent/1/A.p
-    - ./Results/nolatent/1/I.p
-    - ./Results/nolatent/1/R.p
-    - ./Results/nolatent/1/S.p
-  formula: >
-    python plot3.py --latent ./Results/latent/1 --nolatent ./Results/nolatent/1 --output ./Plots/multiple
-  output:
-    - ./Plots/multiple/diffusion1.svg
-    - ./Plots/multiple/diffusion1.pdf
 
-cleanlatent:
-  help: clean all the simulation results from the laten simualtion
+#
+# Clean
+#
+cleanlatentsimuation:
+  help: clean all the simulation results from simulations with latent states
   formula: >
     rm -rf ./Plots/latent/*
     rm -rf ./Results/latent/*
@@ -88,7 +99,7 @@ cleanplotlatent:
     rm -rf ./Plots/latent/*
 
 cleanplot:
-  help: remove the plot files
+  help: remove all plot files (*.svg, *.pdf)
   formula: >
     rm -rf ./Plots/nolatent/*
     rm -rf ./Plots/latent/*
