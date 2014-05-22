@@ -81,9 +81,9 @@ alphaI = 1./0.5 #1.0/0.5
 alphaR = 1./0.5 #1.0/0.5
 
 # muS, muI, muR
-muS = 1.0/10.0 #1.0/0.5
-muI = 1.0/10.0 #1.0/0.5
-muR = 1.0/10.0 #1.0/0.5
+#muS = 1.0/10.0 #1.0/0.5
+#muI = 1.0/10.0 #1.0/0.5
+#muR = 1.0/10.0 #1.0/0.5
 
 #EI to R
 deltaEI = gamma #1.0/3.0
@@ -265,21 +265,39 @@ if __name__ == '__main__':
   #
   # Parse argument
   #
-  simulation_id=1
+
   parser = argparse.ArgumentParser(description='Process SIR simulation with latent states.')
   parser.add_argument('--output', help='output directory', required=True)
   parser.add_argument('--duration', type=int, help='simulation duration in days', required=True)
   parser.add_argument('--tau', type=float, help='simulation step (fraction of day)', default=1.0/5)
+  parser.add_argument('--mu', type=float, help='simulation mu for latent state (fraction of the population)', default=1.0/10)
+  parser.add_argument('--sim-id', type=int, help='simulation step (fraction of day)', default=1.0/5)
+  parser.add_argument('--cell-id', type=int, help='initial cellID', default=0)
+
 
   args = parser.parse_args()
   # Simualtion parameters
   simulation_end_time = float(args.duration)
   # Simulation Step
   tau = float(args.tau)
+  muS = float(args.mu)
+  muI = float(args.mu)
+  muR = float(args.mu)
+  simulation_id=int(args.sim_id)
+  cell_id = args.cell_id
 
   argsdict = vars(args)
-  if args.output:
+
+  if ( args.output and
+      args.mu and
+      args.tau and
+      args.duration and
+      args.mu and
+      args.sim_id
+    ) :
+
     output_dir = argsdict['output']
+
     if output_dir.endswith('\\'):
       output_dir = output_dir[:-1]
 
@@ -314,7 +332,7 @@ if __name__ == '__main__':
                                            nu,
                                            rho,
                                            total_population,
-                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,0)
+                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id)
     A = InfectionMatrix.T
     save_results(S, I, R, ES, EI, ER, A, output_dir + '/' + str(simulation_id))
 

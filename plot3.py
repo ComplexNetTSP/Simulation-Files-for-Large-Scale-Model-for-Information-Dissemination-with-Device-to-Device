@@ -36,31 +36,44 @@ import argparse
 # End of global definition
 #
 
-def matplotlib_setup(figsize_x=10, figsize_y=6):
-    import matplotlib as mpl
-    mpl.rcParams['font.size'] = 9.0
-    mpl.rcParams['font.weight'] = 'bold'
-    mpl.rcParams['xtick.labelsize'] = 10
-    mpl.rcParams['ytick.labelsize'] = 10
-    mpl.rcParams['axes.labelsize'] = 'large'
-    mpl.rcParams['axes.labelweight'] = 'bold'
-    mpl.rcParams['axes.linewidth'] = 0.75
-    mpl.rcParams['lines.linewidth'] = 2
-    mpl.rcParams['lines.markersize'] = 8
-    mpl.rcParams['legend.numpoints'] = 1
-    # figure size in inch
-    mpl.rcParams['figure.figsize'] = figsize_x, figsize_y
-    # figure dots per inch
-    mpl.rcParams['figure.dpi'] = 300
+def matplotlib_setup(figsize_x=7.3, figsize_y=4.2):
+  import matplotlib as mpl
+
+  mpl.rcParams['font.weight'] = 'bold'
+  mpl.rcParams['font.family'] = 'serif'
+  mpl.rcParams['font.serif'] = ['Computer Modern Roman']
+
+  #mpl.rcParams['text.usetex'] = True
+
+  mpl.rcParams['axes.labelsize'] = 9
+  mpl.rcParams['axes.labelweight'] = 'bold'
+  mpl.rcParams['axes.linewidth'] = 0.75
+
+  mpl.rcParams['xtick.labelsize'] = 9
+  mpl.rcParams['ytick.labelsize'] = 9
+
+  mpl.rcParams['legend.fontsize'] = 9
+  mpl.rcParams['legend.numpoints'] = 1
+
+  mpl.rcParams['lines.linewidth'] = 2
+  mpl.rcParams['lines.markersize'] = 8
+
+  # figure size in inch
+  mpl.rcParams['figure.figsize'] = figsize_x, figsize_y
+  # figure dots per inch
+  mpl.rcParams['figure.dpi'] = 300
 
 def plot(I_1, A_1, I_2, A_2, tau, duration, out_dir):
   dim = A_1.shape[0]
   matplotlib_setup()
-  plt.figure()
-  plt.loglog(I_1, 'r', alpha=0.8)
-  plt.loglog(I_2, 'r', alpha=0.8)
+  x = np.linspace(0.0,duration,len(I_1))
+  fig = plt.figure()
+  plt.semilogx(x, np.array(I_1)/15686986, 'r', alpha=0.8)
+  plt.semilogx(x, np.array(I_2)/15686986, 'b', alpha=0.8)
   plt.xlabel('Time in days ')
   plt.ylabel('Infectious')
+  plt.xlim(tau,duration)
+  plt.tight_layout(pad=0.8)
   plt.savefig(out_dir + '/diffusion1.svg')
   plt.savefig(out_dir + '/diffusion1.pdf')
 
@@ -93,7 +106,7 @@ if __name__ == '__main__':
     output_dir = argsdict['output']
     latent = argsdict['latent']
     nolatent = argsdict['nolatent']
-    duration = argsdict['duration']
+    duration = float(argsdict['duration'])
     tau = argsdict['tau']
     # Remove the last backslash of teh sting if exist
     if output_dir.endswith('\\'):

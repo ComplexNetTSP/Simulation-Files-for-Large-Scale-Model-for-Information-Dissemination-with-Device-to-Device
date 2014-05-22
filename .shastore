@@ -1,17 +1,11 @@
 ---
-Plots/multiple/diffusion1.pdf: 7e5867763b001676e3b1ed2f372b48fff7adfebe
-simulation_latent.py: 025240d0f7a6f8894bc69afa9a81135c797c5ffe
-Results/nolatent/1/R.p: 0a740630399b8635ee7bcc756659507b423c82e3
-Plots/multiple/diffusion1.svg: 2be21ae864607690ad0b99d0ac50a29a614e00eb
-simulation.py: 78269dfc04ca455459b9c5a74fdd33bfaf983e3a
-Results/latent/1/I.p: b42588802cfb1f00623bd7984c503e83c281582f
-Results/latent/1/R.p: 794e1344fbf62e1659918f4a76529a0ad444375e
-Results/nolatent/1/S.p: 9bd01493fb62e64ce4e5201de3c6d9f12487d149
-Results/latent/1/A.p: 06f7d242c6a2941937ecce08050f5a94f3c68e88
-Results/nolatent/1/A.p: 04eb4719ea7cecff5d6f0430b3cf5c245f11a733
-Results/latent/1/S.p: 3eaf75a747f71882e03502778be9baaf5b895622
-Results/latent/1/ER.p: 64a19e0e7766992e8ce18cdbb500dc78ddde598c
-Results/latent/1/EI.p: bcc3a3401e19b6fb4c78a4f9fac027d998a3cae4
-Results/nolatent/1/I.p: ef321be64dca40bedc5fff89a050152fc0768523
-Results/latent/1/ES.p: 3e93a0de486806358b0177d545cb7087004a4ce3
+Results/latent/4/R.p: e8b513cae6c3d8b6a54e11dfe30272907ab8ad3e
+Results/latent/4/I.p: cecea89695fbaefc03e0c10115a167f0da39ca0f
+simulation_latent.py: 239d09f62ecbdb7a28780bf7e76ab6e7867431d2
+Results/latent/4/EI.p: e2521d6bd0576aafb7c859155517a2160749bd02
+Results/latent/4/A.p: 7ce14c8dc6c8f94e0f34060d37b728357199bc67
+simulation.py: 7578147a2a67a9b2b17de82e0bf1dc2c135a17f6
+Results/latent/4/S.p: 0d1307f542e842382560e8868097992257ce83d3
+Results/latent/4/ES.p: 381481f8127a5feeb6d2b2ca2ea56eed8a6ad8fb
+Results/latent/4/ER.p: 5d28871339c2841c590dd6772900ad6040b6f1c2
 ...

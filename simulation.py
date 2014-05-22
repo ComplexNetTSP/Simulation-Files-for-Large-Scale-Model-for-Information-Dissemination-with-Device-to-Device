@@ -172,7 +172,7 @@ def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
 #
-def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time):
+def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time, initialInfectedCommunity):
     # Steps
     steps = int(simulation_end_time*(1.0/tau))
     # Compute the initial population distribution
@@ -196,8 +196,8 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
 
     # Infect some nodes
     initital_infection = 100.0
-    S[59, 59] = S[59, 59]-initital_infection
-    I[59, 59] = initital_infection
+    S[initialInfectedCommunity, initialInfectedCommunity] = S[initialInfectedCommunity, initialInfectedCommunity]-initital_infection
+    I[initialInfectedCommunity, initialInfectedCommunity] = initital_infection
     # Stack the differents S.I.R. variables in one vector
     Y = S.reshape(dim*dim).tolist()
     Y = np.append(Y, I.reshape(dim*dim).tolist())
@@ -225,20 +225,28 @@ if __name__ == '__main__':
   #
   # Parse argument
   #
-  simulation_id=1
   parser = argparse.ArgumentParser(description='Process SIR simulation with nolatent states.')
   parser.add_argument('--output', help='output directory', required=True)
   parser.add_argument('--duration', type=int, help='simulation duration in days', required=True)
   parser.add_argument('--tau', type=float, help='simulation step (fraction of day)', default=1.0/5)
+  parser.add_argument('--sim-id', type=int, help='simulation step (fraction of day)', default=1.0/5)
+  parser.add_argument('--cell-id', type=int, help='initial cellID', default=0)
 
   args = parser.parse_args()
   # Simualtion parameters
   simulation_end_time = float(args.duration)
   # Simulation Step
   tau = float(args.tau)
+  simulation_id = int(args.sim_id)
+  cell_id = int(args.cell_id)
 
   argsdict = vars(args)
-  if args.output:
+  if ( args.output and
+      args.tau and
+      args.duration and
+      args.sim_id
+    ):
+
     output_dir = argsdict['output']
     if output_dir.endswith('\\'):
       output_dir = output_dir[:-1]
@@ -267,14 +275,16 @@ if __name__ == '__main__':
     # Simulation
     #
     S, I, R, InfectionMatrix = run_simumation(N0,
-                                           dim,
-                                           tau,
-                                           beta,
-                                           sigma,
-                                           nu,
-                                           rho,
-                                           total_population,
-                                           simulation_end_time)
+                                              dim,
+                                              tau,
+                                              beta,
+                                              sigma,
+                                              nu,
+                                              rho,
+                                              total_population,
+                                              simulation_end_time,
+                                              cell_id
+                                            )
     A = InfectionMatrix.T
     save_results(S, I, R, A, output_dir + '/' +str(simulation_id))
 

@@ -1,17 +1,17 @@
 ---
 # Macros
-#! DURATION=80
-#! TAU=0.2
+#! DURATION=70
+#! TAU=0.05
 
 #
 # Simulations
 #
-latent:
+latent_cell0:
   help: run the SIR simulation with latent states (Gillespie Tau-leap method)
   dependencies:
     - ./simulation_latent.py
   formula: >
-    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 1 --mu 0.3
   output:
     - ./Results/latent/1/A.p
     - ./Results/latent/1/I.p
@@ -21,23 +21,95 @@ latent:
     - ./Results/latent/1/ES.p
     - ./Results/latent/1/ER.p
 
-nolatent:
+latent_cell0_mu2:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 4 --mu 0.2
+  output:
+    - ./Results/latent/4/A.p
+    - ./Results/latent/4/I.p
+    - ./Results/latent/4/R.p
+    - ./Results/latent/4/S.p
+    - ./Results/latent/4/EI.p
+    - ./Results/latent/4/ES.p
+    - ./Results/latent/4/ER.p
+
+nolatent_cell0:
   help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
   dependencies:
     - ./simulation.py
   formula: >
-    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau $TAU
+    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 1
   output:
     - ./Results/nolatent/1/A.p
     - ./Results/nolatent/1/I.p
     - ./Results/nolatent/1/R.p
     - ./Results/nolatent/1/S.p
 
+latent_cell59:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 2 --mu=0.3
+  output:
+    - ./Results/latent/2/A.p
+    - ./Results/latent/2/I.p
+    - ./Results/latent/2/R.p
+    - ./Results/latent/2/S.p
+    - ./Results/latent/2/EI.p
+    - ./Results/latent/2/ES.p
+    - ./Results/latent/2/ER.p
+
+latent_cell59_mu2:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method) with mu=0.2
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 3 --mu=0.2
+  output:
+    - ./Results/latent/3/A.p
+    - ./Results/latent/3/I.p
+    - ./Results/latent/3/R.p
+    - ./Results/latent/3/S.p
+    - ./Results/latent/3/EI.p
+    - ./Results/latent/3/ES.p
+    - ./Results/latent/3/ER.p
+
+
+nolatent_cell59:
+  help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation.py
+  formula: >
+    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 2
+  output:
+    - ./Results/nolatent/2/A.p
+    - ./Results/nolatent/2/I.p
+    - ./Results/nolatent/2/R.p
+    - ./Results/nolatent/2/S.p
 
 #
 # Plot
 #
-multipleplot:
+multipleplot_cell59:
+  help: Plot Side by side the simulation results of the latent case and no latent case
+  dependencies:
+    - ./Results/latent/2/I.p
+    - ./Results/latent/2/A.p
+    - ./Results/nolatent/2/A.p
+    - ./Results/nolatent/2/I.p
+    - ./Results/nolatent/2/R.p
+    - ./Results/nolatent/2/S.p
+  formula: >
+    python plot3.py --latent ./Results/latent/2 --nolatent ./Results/nolatent/2 --output ./Plots/multiple/2/ --tau $TAU --duration $DURATION
+  output:
+    - ./Plots/multiple/2/diffusion1.svg
+    - ./Plots/multiple/2/diffusion1.pdf
+
+multipleplot_cell0:
   help: Plot Side by side the simulation results of the latent case and no latent case
   dependencies:
     - ./Results/latent/1/I.p
@@ -47,10 +119,10 @@ multipleplot:
     - ./Results/nolatent/1/R.p
     - ./Results/nolatent/1/S.p
   formula: >
-    python plot3.py --latent ./Results/latent/1 --nolatent ./Results/nolatent/1 --output ./Plots/multiple --tau $TAU --duration $DURATION
+    python plot3.py --latent ./Results/latent/1 --nolatent ./Results/nolatent/1 --output ./Plots/multiple/1/ --tau $TAU --duration $DURATION
   output:
-    - ./Plots/multiple/diffusion1.svg
-    - ./Plots/multiple/diffusion1.pdf
+    - ./Plots/multiple/1/diffusion1.svg
+    - ./Plots/multiple/1/diffusion1.pdf
 
 latentplot:
   help: Plot result for one simualtion at a time
@@ -59,6 +131,19 @@ latentplot:
     - ./Results/latent/1/A.p
   formula: >
     python plot.py --input ./Results/latent/1 --output ./Plots/latent
+  output:
+    - ./Plots/latent/diffusion1.pdf
+    - ./Plots/latent/diffusion1.svg
+    - ./Plots/latent/diffusion.svg
+    - ./Plots/latent/diffusion.pdf
+
+latentplot_cell59:
+  help: Plot result for one simualtion at a time
+  dependencies:
+    - ./Results/latent/2/I.p
+    - ./Results/latent/2/A.p
+  formula: >
+    python plot.py --input ./Results/latent/2 --output ./Plots/latent
   output:
     - ./Plots/latent/diffusion1.pdf
     - ./Plots/latent/diffusion1.svg
@@ -78,25 +163,13 @@ noLatentplot:
     - ./Plots/nolatent/diffusion.svg
     - ./Plots/nolatent/diffusion.pdf
 
-
 #
 # Clean
 #
-cleanlatentsimuation:
-  help: clean all the simulation results from simulations with latent states
+cleanlatent_cell59:
+  help: remove simulation files
   formula: >
-    rm -rf ./Plots/latent/*
-    rm -rf ./Results/latent/*
-
-cleannolatent:
-  help: clean all the simulation results from the simualtion without latent states
-  formula: >
-    rm -rf ./Results/nolatent/*
-
-cleanplotlatent:
-  help: clean all the simulation results from the simualtion with latent states
-  formula: >
-    rm -rf ./Plots/latent/*
+    rm -rf ./Results/latent/2/*
 
 cleanplot:
   help: remove all plot files (*.svg, *.pdf)
@@ -109,4 +182,3 @@ cleanpy:
   help: remove *.pyc files
   formula: >
     rm -f *.pyc
-    find . -name .DS_Store -exec rm -rf {} \;
