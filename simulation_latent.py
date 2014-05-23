@@ -259,7 +259,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
         Y = Ytemp
         pbar.update(step)
     pbar.finish()
-    return Sr, Ir, Rr, ESr,EIr,ERr,InfectionMatrix
+    return Sr, Ir, Rr, ESr, EIr, ERr, InfectionMatrix
 
 if __name__ == '__main__':
   #
