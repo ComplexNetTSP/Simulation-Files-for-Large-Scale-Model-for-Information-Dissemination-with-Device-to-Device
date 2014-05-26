@@ -1,17 +1,24 @@
 ---
-Results/latent/2/R.p: b6855974feb586ab23189e37fc69ade819b7a586
-simulation_latent.py: 239d09f62ecbdb7a28780bf7e76ab6e7867431d2
+simulation_latent.py: 15b9923a87d3956f3c17ef2eb2df17d98ad5f217
 Results/latent/2/I.p: ff2b63763968882fa4cb470224bd547557553c46
-Plots/multiple/2/diffusion1.pdf: 6b3caa0831cf952589771d1a9a2b05edcae6da2a
-Results/nolatent/2/S.p: a3fbb1972e619c64d366a57ee3eeb985d6cc3673
-Results/latent/2/S.p: 18016ad3134af98dcc80c8dfb4a8aafe5a0b86d8
-simulation.py: 7578147a2a67a9b2b17de82e0bf1dc2c135a17f6
-Results/latent/2/A.p: 945b80c6d13c5a9ec7ad5fcd19dba1f8eac8b2ce
 Results/nolatent/2/I.p: c2d9df051504ba591ce20db5a1d832635453139a
+Results/latent/8/ER.p: 0365cfb27eb237c642620a8e21e1303d1c7573aa
+Results/latent/2/EI.p: 948ce8bf55f656ae0527450f8865dcfbff7cfc8a
+Results/latent/8/ES.p: 65d6206206341cd0d13d820fafa16ec8c1746027
+Results/latent/2/A.p: 945b80c6d13c5a9ec7ad5fcd19dba1f8eac8b2ce
 Results/nolatent/2/R.p: 226f72719fcb47b1ea2cab88846645082da9e50e
 Results/nolatent/2/A.p: 812ee76efe078538531e4da919041142251a6bfb
-Plots/multiple/2/diffusion1.svg: a5aee4b998476234ffea8da96cd739d014761541
+Results/nolatent/2/S.p: a3fbb1972e619c64d366a57ee3eeb985d6cc3673
 Results/latent/2/ER.p: f3fad16bf446ff0e3e4d0b9657b7d75588dad3bd
-Results/latent/2/EI.p: 948ce8bf55f656ae0527450f8865dcfbff7cfc8a
 Results/latent/2/ES.p: 2937bf16cc090b8627ce3d07edec5a0e9edb3d9d
+Results/latent/8/S.p: 1a1392d50012d93cc1195917e558d9cc7c6b36ab
+Results/latent/8/R.p: ff7e9fdf28fe145b22dc4a617345997b04e1a609
+Plots/multiple/2/diffusion1.svg: a5aee4b998476234ffea8da96cd739d014761541
+Results/latent/8/EI.p: b2f4387bb9ad365ddfcc0bb344d588c233ce4a04
+Results/latent/8/A.p: d9a63f41d9977b6685f86050effc821ffe041d4c
+Results/latent/2/R.p: b6855974feb586ab23189e37fc69ade819b7a586
+Plots/multiple/2/diffusion1.pdf: 6b3caa0831cf952589771d1a9a2b05edcae6da2a
+Results/latent/2/S.p: 18016ad3134af98dcc80c8dfb4a8aafe5a0b86d8
+simulation.py: 7578147a2a67a9b2b17de82e0bf1dc2c135a17f6
+Results/latent/8/I.p: dc53356511bda68d0faaa0c06e49930ed0550057
 ...

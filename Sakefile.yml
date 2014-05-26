@@ -6,7 +6,7 @@
 #
 # Simulations
 #
-latent_cell0:
+latent_cell0_mu3:
   help: run the SIR simulation with latent states (Gillespie Tau-leap method)
   dependencies:
     - ./simulation_latent.py
@@ -36,6 +36,36 @@ latent_cell0_mu2:
     - ./Results/latent/4/ES.p
     - ./Results/latent/4/ER.p
 
+latent_cell0_mu4:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 5 --mu 0.4
+  output:
+    - ./Results/latent/5/A.p
+    - ./Results/latent/5/I.p
+    - ./Results/latent/5/R.p
+    - ./Results/latent/5/S.p
+    - ./Results/latent/5/EI.p
+    - ./Results/latent/5/ES.p
+    - ./Results/latent/5/ER.p
+
+latent_cell0_mu5:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method)
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 6 --mu 0.5
+  output:
+    - ./Results/latent/6/A.p
+    - ./Results/latent/6/I.p
+    - ./Results/latent/6/R.p
+    - ./Results/latent/6/S.p
+    - ./Results/latent/6/EI.p
+    - ./Results/latent/6/ES.p
+    - ./Results/latent/6/ER.p
+
 nolatent_cell0:
   help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
   dependencies:
@@ -48,7 +78,7 @@ nolatent_cell0:
     - ./Results/nolatent/1/R.p
     - ./Results/nolatent/1/S.p
 
-latent_cell59:
+latent_cell59_mu3:
   help: run the SIR simulation with latent states (Gillespie Tau-leap method)
   dependencies:
     - ./simulation_latent.py
@@ -77,6 +107,36 @@ latent_cell59_mu2:
     - ./Results/latent/3/EI.p
     - ./Results/latent/3/ES.p
     - ./Results/latent/3/ER.p
+
+latent_cell59_mu4:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method) with mu=0.4
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 8 --mu=0.4
+  output:
+    - ./Results/latent/8/A.p
+    - ./Results/latent/8/I.p
+    - ./Results/latent/8/R.p
+    - ./Results/latent/8/S.p
+    - ./Results/latent/8/EI.p
+    - ./Results/latent/8/ES.p
+    - ./Results/latent/8/ER.p
+
+latent_cell59_mu5:
+  help: run the SIR simulation with latent states (Gillespie Tau-leap method) with mu=0.5
+  dependencies:
+    - ./simulation_latent.py
+  formula: >
+    python simulation_latent.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 9 --mu=0.5
+  output:
+    - ./Results/latent/9/A.p
+    - ./Results/latent/9/I.p
+    - ./Results/latent/9/R.p
+    - ./Results/latent/9/S.p
+    - ./Results/latent/9/EI.p
+    - ./Results/latent/9/ES.p
+    - ./Results/latent/9/ER.p
 
 
 nolatent_cell59:
