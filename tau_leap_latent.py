@@ -49,10 +49,10 @@ def population_at_equilibrum(i, sigma, nu, rho, Ni):
     dim, = sigma.shape
     N = np.zeros(dim)
     for j in range(dim):
-        if i != j:
-            N[j] = Ni*(sigma[i] * nu[i,j]) / (rho[i,j] * (1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum()))
-        else:
-            N[j] = Ni/(1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum())
+      if i != j:
+        N[j] = Ni*(sigma[i] * nu[i,j]) / (rho[i,j] * (1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum()))
+      else:
+        N[j] = Ni/(1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum())
     return N
 
 def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI):
@@ -158,7 +158,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
         boundaryCondition_ERy = 0
 
         # Suceptible that become infected
-        Rate[i,j,1] = min(poisson(((beta[i]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
+        Rate[i,j,1] = min(poisson(((beta[j]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
         boundaryCondition_Sy -= Rate[i,j,1]
         boundaryCondition_Iy += Rate[i,j,1]
 

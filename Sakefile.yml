@@ -1,7 +1,7 @@
 ---
 # Macros
-#! DURATION=70
-#! TAU=0.05
+#! DURATION=10
+#! TAU=0.2
 
 #
 # Simulations
@@ -138,6 +138,35 @@ latent_cell59_mu5:
     - ./Results/latent/9/ES.p
     - ./Results/latent/9/ER.p
 
+latent_cell59_mu5_heterogeneous:
+  help: run the SIR simulation with latent states and return prob (Gillespie Tau-leap method) with mu=0.5, ki=0.5
+  dependencies:
+    - ./simulation_latent_heterogeneous.py
+  formula: >
+    python simulation_latent_heterogeneous.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 10 --mu 0.5
+  output:
+    - ./Results/latent/10/A.p
+    - ./Results/latent/10/I.p
+    - ./Results/latent/10/R.p
+    - ./Results/latent/10/S.p
+    - ./Results/latent/10/EI.p
+    - ./Results/latent/10/ES.p
+    - ./Results/latent/10/ER.p
+
+latent_cell0_mu5_heterogeneous:
+  help: run the SIR simulation with latent states and return prob (Gillespie Tau-leap method) with mu=0.5, ki=0.5
+  dependencies:
+    - ./simulation_latent_heterogeneous.py
+  formula: >
+    python simulation_latent_heterogeneous.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 11 --mu 0.5
+  output:
+    - ./Results/latent/11/A.p
+    - ./Results/latent/11/I.p
+    - ./Results/latent/11/R.p
+    - ./Results/latent/11/S.p
+    - ./Results/latent/11/EI.p
+    - ./Results/latent/11/ES.p
+    - ./Results/latent/11/ER.p
 
 nolatent_cell59:
   help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)

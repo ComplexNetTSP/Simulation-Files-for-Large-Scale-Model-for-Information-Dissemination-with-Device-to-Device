@@ -104,9 +104,8 @@ def get_beta(densitySubPrefecture_filename,
 
     beta = np.zeros(community)
     for i in listing:
-        k = RhoPolygons[i]*(np.pi)*r**2
-        beta[ConnectionNumber[i]-1] = -k*np.log(1-c)
-
+      k = RhoPolygons[i]*(np.pi)*r**2
+      beta[ConnectionNumber[i]-1] = -k*np.log(1-c)
     return beta
 
 
