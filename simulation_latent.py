@@ -86,7 +86,7 @@ alphaR = 1./0.5 #1.0/0.5
 #muR = 1.0/10.0 #1.0/0.5
 
 #EI to R
-deltaEI = gamma #1.0/3.0
+#deltaEI = gamma #1.0/3.0
 
 ###############################################################################
 # End of Global Definition
@@ -195,7 +195,7 @@ def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
 #
-def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
+def run_simumation(N0, dim, tau, beta, sigma, nu, rho, gamma, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
     # Steps
     steps = int(simulation_end_time*(1.0/tau))
     # Compute the initial population distribution
@@ -273,7 +273,7 @@ if __name__ == '__main__':
   parser.add_argument('--mu', type=float, help='simulation mu for latent state (fraction of the population)', default=1.0/10)
   parser.add_argument('--sim-id', type=int, help='simulation step (fraction of day)', default=1.0/5)
   parser.add_argument('--cell-id', type=int, help='initial cellID', default=0)
-
+  parser.add_argument('--gamma', type=float, help='initial cellID', default=1.0/3.0)
 
   args = parser.parse_args()
   # Simualtion parameters
@@ -283,8 +283,12 @@ if __name__ == '__main__':
   muS = float(args.mu)
   muI = float(args.mu)
   muR = float(args.mu)
+  gamma = float(args.gamma)
+  #EI to R
+  deltaEI = gamma
   simulation_id=int(args.sim_id)
   cell_id = args.cell_id
+
 
   argsdict = vars(args)
 
@@ -331,6 +335,7 @@ if __name__ == '__main__':
                                            sigma,
                                            nu,
                                            rho,
+                                           gamma,
                                            total_population,
                                            simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id)
     A = InfectionMatrix.T

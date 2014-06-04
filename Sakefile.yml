@@ -1,7 +1,7 @@
 ---
 # Macros
-#! DURATION=10
-#! TAU=0.2
+#! DURATION=70
+#! TAU=0.05
 
 #
 # Simulations
@@ -66,18 +66,6 @@ latent_cell0_mu5:
     - ./Results/latent/6/ES.p
     - ./Results/latent/6/ER.p
 
-nolatent_cell0:
-  help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
-  dependencies:
-    - ./simulation.py
-  formula: >
-    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 1
-  output:
-    - ./Results/nolatent/1/A.p
-    - ./Results/nolatent/1/I.p
-    - ./Results/nolatent/1/R.p
-    - ./Results/nolatent/1/S.p
-
 latent_cell59_mu3:
   help: run the SIR simulation with latent states (Gillespie Tau-leap method)
   dependencies:
@@ -138,12 +126,15 @@ latent_cell59_mu5:
     - ./Results/latent/9/ES.p
     - ./Results/latent/9/ER.p
 
+#
+# heterogeneous
+#
 latent_cell59_mu5_heterogeneous:
   help: run the SIR simulation with latent states and return prob (Gillespie Tau-leap method) with mu=0.5, ki=0.5
   dependencies:
     - ./simulation_latent_heterogeneous.py
   formula: >
-    python simulation_latent_heterogeneous.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 10 --mu 0.5
+    /usr/local/anaconda/bin/python simulation_latent_heterogeneous.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 59 --sim-id 10 --mu 0.5
   output:
     - ./Results/latent/10/A.p
     - ./Results/latent/10/I.p
@@ -158,7 +149,7 @@ latent_cell0_mu5_heterogeneous:
   dependencies:
     - ./simulation_latent_heterogeneous.py
   formula: >
-    python simulation_latent_heterogeneous.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 11 --mu 0.5
+    /usr/local/anaconda/bin/python simulation_latent_heterogeneous.py --output ./Results/latent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 11 --mu 0.5
   output:
     - ./Results/latent/11/A.p
     - ./Results/latent/11/I.p
@@ -168,6 +159,9 @@ latent_cell0_mu5_heterogeneous:
     - ./Results/latent/11/ES.p
     - ./Results/latent/11/ER.p
 
+#
+# No Latent
+#
 nolatent_cell59:
   help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
   dependencies:
@@ -180,78 +174,17 @@ nolatent_cell59:
     - ./Results/nolatent/2/R.p
     - ./Results/nolatent/2/S.p
 
-#
-# Plot
-#
-multipleplot_cell59:
-  help: Plot Side by side the simulation results of the latent case and no latent case
+nolatent_cell0:
+  help: run the SIR simulation with nolatent states (Gillespie Tau-leap method)
   dependencies:
-    - ./Results/latent/2/I.p
-    - ./Results/latent/2/A.p
-    - ./Results/nolatent/2/A.p
-    - ./Results/nolatent/2/I.p
-    - ./Results/nolatent/2/R.p
-    - ./Results/nolatent/2/S.p
+    - ./simulation.py
   formula: >
-    python plot3.py --latent ./Results/latent/2 --nolatent ./Results/nolatent/2 --output ./Plots/multiple/2/ --tau $TAU --duration $DURATION
+    python simulation.py --output ./Results/nolatent/ --duration $DURATION --tau $TAU --cell-id 0 --sim-id 1
   output:
-    - ./Plots/multiple/2/diffusion1.svg
-    - ./Plots/multiple/2/diffusion1.pdf
-
-multipleplot_cell0:
-  help: Plot Side by side the simulation results of the latent case and no latent case
-  dependencies:
-    - ./Results/latent/1/I.p
-    - ./Results/latent/1/A.p
     - ./Results/nolatent/1/A.p
     - ./Results/nolatent/1/I.p
     - ./Results/nolatent/1/R.p
     - ./Results/nolatent/1/S.p
-  formula: >
-    python plot3.py --latent ./Results/latent/1 --nolatent ./Results/nolatent/1 --output ./Plots/multiple/1/ --tau $TAU --duration $DURATION
-  output:
-    - ./Plots/multiple/1/diffusion1.svg
-    - ./Plots/multiple/1/diffusion1.pdf
-
-latentplot:
-  help: Plot result for one simualtion at a time
-  dependencies:
-    - ./Results/latent/1/I.p
-    - ./Results/latent/1/A.p
-  formula: >
-    python plot.py --input ./Results/latent/1 --output ./Plots/latent
-  output:
-    - ./Plots/latent/diffusion1.pdf
-    - ./Plots/latent/diffusion1.svg
-    - ./Plots/latent/diffusion.svg
-    - ./Plots/latent/diffusion.pdf
-
-latentplot_cell59:
-  help: Plot result for one simualtion at a time
-  dependencies:
-    - ./Results/latent/2/I.p
-    - ./Results/latent/2/A.p
-  formula: >
-    python plot.py --input ./Results/latent/2 --output ./Plots/latent
-  output:
-    - ./Plots/latent/diffusion1.pdf
-    - ./Plots/latent/diffusion1.svg
-    - ./Plots/latent/diffusion.svg
-    - ./Plots/latent/diffusion.pdf
-
-noLatentplot:
-  help: Plot result for one simualtion at a time
-  dependencies:
-    - ./Results/nolatent/1/I.p
-    - ./Results/nolatent/1/A.p
-  formula: >
-    python plot.py --input ./Results/nolatent/1 --output ./Plots/nolatent
-  output:
-    - ./Plots/nolatent/diffusion1.pdf
-    - ./Plots/nolatent/diffusion1.svg
-    - ./Plots/nolatent/diffusion.svg
-    - ./Plots/nolatent/diffusion.pdf
-
 #
 # Clean
 #

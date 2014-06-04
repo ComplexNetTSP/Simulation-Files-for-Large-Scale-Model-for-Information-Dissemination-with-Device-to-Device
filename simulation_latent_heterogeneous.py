@@ -35,8 +35,9 @@ import numpy as np
 import pylab as plt
 import shapefile
 import argparse
+from numba import jit
 
-from tau_leap_heterogeneous import population_at_equilibrum, stoc_eqs
+from tau_leap_latent import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 ###############################################################################
 # Global Definition
@@ -44,7 +45,7 @@ from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 
 #Transition Probability file name
 filenameT = 'Transitions/transitionprob.p'
-
+degree_filename = 'Transitions/degree.p'
 #Initial Census Data
 filenameC = 'PopulationCensus/populationCensusData'
 areaSubPrefecture_filename = 'PopulationCensus/areaSubPrefectureCensusData.p'
@@ -178,11 +179,29 @@ def get_transition_probability(filename):
     return res1, res2
 
 def rate_of_return(dim, rate):
+
+    #with open(densitySubPrefecture_filename, "rb") as pickleFile:
+    #    RhoPolygons = p.load(pickleFile)
+    with open(polygonPointsSubPrefecture_filename, "rb") as pickleFile:
+        PolygonPoints = p.load(pickleFile)
+        community = len(PolygonPoints.keys())
+        listing = PolygonPoints.keys()
+    with open(subPrefectureNumbering_filename, "rb") as pickleFile:
+        ConnectionNumber = p.load(pickleFile)
+    with open(degree_filename, 'rb') as pickleFile:
+      k = p.load(pickleFile)
+
+    Khi = -1.0
+    kmean = np.mean(np.array(k, dtype=np.float))
+
     rho = np.zeros((dim, dim))
     for i in xrange(dim):
-        for j in xrange(dim):
-            if i != j:
-                rho[i, j] = rate
+      for j in xrange(dim):
+        if i != j:
+          if k[j] == 0:
+            rho[i, j] = rate
+          else:
+            rho[i, j] = 1./((1./rate)*(k[j]**Khi)/(kmean**Khi))
     return rho
 
 
@@ -196,7 +215,8 @@ def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
 #
-def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity,k):
+@jit
+def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
     # Steps
     steps = int(simulation_end_time*(1.0/tau))
     # Compute the initial population distribution
@@ -242,7 +262,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
 
     InfectionMatrix = np.zeros((steps, 255))
     for step in xrange(steps):
-        Ytemp = stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,k)
+        Ytemp = stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI)
         Ytemp = Ytemp.reshape((6, dim*dim))
         Stemp = Ytemp[0].reshape((dim, dim))
         Itemp = Ytemp[1].reshape((dim, dim))
@@ -333,7 +353,7 @@ if __name__ == '__main__':
                                            nu,
                                            rho,
                                            total_population,
-                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id,k)
+                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id)
     A = InfectionMatrix.T
     save_results(S, I, R, ES, EI, ER, A, output_dir + '/' + str(simulation_id))
 

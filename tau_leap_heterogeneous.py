@@ -27,7 +27,9 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 
 import numpy as np
 from numpy.random import poisson
+from numba import jit
 
+@jit
 def division_safe(a,b):
     c = np.zeros((a.size,))
     for i in xrange(c.size):
@@ -37,6 +39,7 @@ def division_safe(a,b):
             c[i] = 0.0
     return c
 
+@jit
 def population_at_equilibrum(i, sigma, nu, rho, Ni):
     '''
     Definition:
@@ -55,7 +58,8 @@ def population_at_equilibrum(i, sigma, nu, rho, Ni):
         N[j] = Ni/(1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum())
     return N
 
-def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,k):
+@jit
+def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim, alphaS, alphaI, alphaR, muS, muI, muR, deltaEI):
     '''
     Definition:
     - beta: infection rate
@@ -73,14 +77,12 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
     EI = Y[4].reshape((dim,dim))
     ER = Y[5].reshape((dim,dim))
     Ni = np.sum(S, axis=0) + np.sum(I, axis=0) + np.sum(R, axis=0) + np.sum(ES, axis=0) + np.sum(EI, axis=0) + np.sum(ER, axis=0)
-    Nij = S + I + R + ES + EI + ER
     Sy = S.copy()
     Iy = I.copy()
     Ry = R.copy()
     ESy = ES.copy()
     EIy = EI.copy()
     ERy = ER.copy()
-    k = np.array(k)
     #
     # Compute the mobilty transitions
     #
@@ -90,32 +92,32 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
     for i in xrange(dim):
       for j in range(dim):
         if i != j:
-          # Suceptible departing from i to j
+          # Suceptible returning from j to i
           Rate[i,j,0] = min(poisson((rho[i,j]*Sy[i,j])*tau), Sy[i,j])
           Sy[i,j] -= Rate[i,j,0]
           Sy[i,i] += Rate[i,j,0]
 
-          # Infected departing from i to j
+          # Infected returning from j to i
           Rate[i,j,2] = min(poisson((rho[i,j]*Iy[i,j])*tau), Iy[i,j])
           Iy[i,j] -= Rate[i,j,2]
           Iy[i,i] += Rate[i,j,2]
 
-          # Recovered departing from i to j
+          # Recovered returning from j to i
           Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
           Ry[i,j] -= Rate[i,j,4]
           Ry[i,i] += Rate[i,j,4]
 
-          # E_Suceptible departing from i to j
+          # E_Suceptible returning from j to i
           Rate[i,j,8] = min(poisson((rho[i,j]*ESy[i,j])*tau), ESy[i,j])
           ESy[i,j] -= Rate[i,j,8]
           ESy[i,i] += Rate[i,j,8]
 
-          # EInfected departing from i to j
+          # EInfected returning from j to i
           Rate[i,j,9] = min(poisson((rho[i,j]*EIy[i,j])*tau), EIy[i,j])
           EIy[i,j] -= Rate[i,j,9]
           EIy[i,i] += Rate[i,j,9]
 
-          # ERecovered departing from i to j
+          # ERecovered returning from j to i
           Rate[i,j,10] = min(poisson((rho[i,j]*ERy[i,j])*tau), ERy[i,j])
           ERy[i,j] -= Rate[i,j,10]
           ERy[i,i] += Rate[i,j,10]
@@ -149,7 +151,6 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
     #
     # Compute the infection dynamic
     #
-    acc = 0
     for i in xrange(dim):
       for j in xrange(dim):
         boundaryCondition_Sy = 0
@@ -160,12 +161,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
         boundaryCondition_ERy = 0
 
         # Suceptible that become infected
-        Iold = (Iy[:,j]).sum()/(Nij[:,j]).sum()
-        I = (k*Iy[:,j]).sum()/(k*Nij[:,j]).sum()
-        acc = (beta[i]*I*Sy[i,j] *tau)-(beta[j]*Iold*Sy[i,j]*tau)
-        Rate[i,j,1] = min(poisson((beta[j] * Sy[i,j] * I)*tau), Sy[i,j])
-
-        #acc += (beta[j]*I) - (beta[i]*(Sy[i,j]*Iy[:,j]).sum()/Ni[j])
+        Rate[i,j,1] = min(poisson(((beta[j]/Ni[j]) * (Sy[i,j]*Iy[:,j]).sum())*tau), Sy[i,j])
         boundaryCondition_Sy -= Rate[i,j,1]
         boundaryCondition_Iy += Rate[i,j,1]
 
@@ -270,8 +266,6 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
           flow = Rate[i,j,20]
         EIy[i,j] -= flow
         Ry[i,j] += flow
-
-    print acc
     Yy = Sy.reshape(dim*dim).tolist()
     Yy = np.append(Yy, Iy.reshape(dim*dim).tolist())
     Yy = np.append(Yy, Ry.reshape(dim*dim).tolist())
