@@ -191,7 +191,7 @@ def rate_of_return(dim, rate):
     with open(degree_filename, 'rb') as pickleFile:
       k = p.load(pickleFile)
 
-    Khi = -1.0
+    Khi = -0.5
     kmean = np.mean(np.array(k, dtype=np.float))
 
     rho = np.zeros((dim, dim))
@@ -201,7 +201,7 @@ def rate_of_return(dim, rate):
           if k[j] == 0:
             rho[i, j] = rate
           else:
-            rho[i, j] = 1./((1./rate)*(k[j]**Khi)/(kmean**Khi))
+            rho[i, j] = 1.0/((1./rate)*(k[j]**Khi)/(kmean**Khi))
     return rho
 
 
