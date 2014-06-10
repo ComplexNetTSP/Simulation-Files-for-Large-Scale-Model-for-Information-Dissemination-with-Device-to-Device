@@ -32,10 +32,10 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 import os
 import pickle as p
 import numpy as np
-import pylab as plt
+#import pylab as plt
 import shapefile
 import argparse
-from numba import jit
+#from numba import jit
 
 from tau_leap_latent import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
@@ -201,7 +201,7 @@ def rate_of_return(dim, rate):
           if k[j] == 0:
             rho[i, j] = rate
           else:
-            rho[i, j] = 1.0/((1./rate)*(k[j]**Khi)/(kmean**Khi))
+            rho[i, j] = 1.0/((1.0/rate)*(k[j]**Khi)/(kmean**Khi))
     return rho
 
 
@@ -215,7 +215,7 @@ def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
 #
-@jit
+#@jit
 def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
     # Steps
     steps = int(simulation_end_time*(1.0/tau))
