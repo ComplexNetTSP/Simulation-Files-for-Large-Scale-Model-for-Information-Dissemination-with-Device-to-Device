@@ -26,71 +26,17 @@
 
 __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 
-#
 # Imports
-#
 import os
 import pickle as p
 import numpy as np
-import pylab as plt
-import shapefile
 import argparse
 
 from tau_leap_latent import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
-###############################################################################
+
 # Global Definition
-#
-
-#Transition Probability file name
-filenameT = 'Transitions/transitionprob.p'
-
-#Initial Census Data
-filenameC = 'PopulationCensus/populationCensusData'
-areaSubPrefecture_filename = 'PopulationCensus/areaSubPrefectureCensusData.p'
-densitySubPrefecture_filename = 'PopulationCensus/densitySubPrefectureCensusData.p'
-polygonPointsSubPrefecture_filename = 'PopulationCensus/polygonPointsSubPrefectureCensusData.p'
-subPrefectureNumbering_filename = 'PopulationCensus/subPrefectureNumberingCensusData.p'
-
-# Number of region
-dim = 255
-
-# Total Population
-total_population = 15686986
-
-# Probability of message transimision per contact
-#c=0.8
-c=np.zeros(dim)
-for i in range(dim):
-    c[i]=0.8
-
-# Radius of transmision in km
-r = 100.0/1000.0
-
-# Recovery rate
-gamma = 1.0/3.0
-
-# Return Rate
-return_rate = 1.0/0.5
-
-# Simulation End Time in Days
-
-# alphaS, alphaI, alphaR
-alphaS = 1./0.5 #1.0/0.5
-alphaI = 1./0.5 #1.0/0.5
-alphaR = 1./0.5 #1.0/0.5
-
-# muS, muI, muR
-#muS = 1.0/10.0 #1.0/0.5
-#muI = 1.0/10.0 #1.0/0.5
-#muR = 1.0/10.0 #1.0/0.5
-
-#EI to R
-#deltaEI = gamma #1.0/3.0
-
-###############################################################################
-# End of Global Definition
-#
+import properties
 
 def save_results(S, I, R, ES, EI, ER, A, directory='Results'):
     if not os.path.exists(directory):
@@ -149,7 +95,6 @@ def initial_population(areaSubPrefecture_filename,
         listing = PolygonPoints.keys()
     with open(subPrefectureNumbering_filename, "rb") as pickleFile:
         ConnectionNumber = p.load(pickleFile)
-        #print ConnectionNumber
     N0 = np.zeros(community)
     for i in listing:
         N0[ConnectionNumber[i]-1] = AreaPolygons[i]*RhoPolygons[i]/float(Totalpopulation)
@@ -159,9 +104,7 @@ def initial_population(areaSubPrefecture_filename,
 def get_transition_probability(filename):
     with open(filename, "rb") as pickleFile:
         Tlist = p.load(pickleFile)
-    #
     # Transition Probability
-    #
     Tarray = np.array(Tlist, dtype=np.float)
     O = np.ones((255, 255)) - np.identity(255)
     Tarray = Tarray * O
@@ -170,9 +113,7 @@ def get_transition_probability(filename):
         for j in xrange(255):
             if np.isnan(res1[i, j]):
                 res1[i, j] = 0.0
-    #
     # Per Capita Leaving Rate
-    #
     res2 = Tarray.sum(axis=1)/Tarray.sum()
     return res1, res2
 
@@ -192,9 +133,7 @@ def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
         N[i, :] = np.floor(population_at_equilibrum(i, sigma, nu, rho, Ni[i])*total_population)
     return N
 
-#
 # MAIN FUNCTION THAT RUN THE SIMULATION
-#
 def run_simumation(N0, dim, tau, beta, sigma, nu, rho, gamma, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
     # Steps
     steps = int(simulation_end_time*(1.0/tau))
@@ -202,16 +141,11 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, gamma, total_population, 
     N = compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
     print 'average population per cellid: ', np.sum(N, axis=0)
 
-    #
     # init the progress bar
-    #
     widgets = ['Simulation: ', Percentage(), ' ', Bar(marker=RotatingMarker()),
            ' ', ETA()]
     pbar = ProgressBar(widgets=widgets, maxval=steps).start()
 
-    #
-    #
-    #
     # Inititial Population in each States
     S = N.copy()
     I = np.zeros((dim, dim))
@@ -262,10 +196,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, gamma, total_population, 
     return Sr, Ir, Rr, ESr, EIr, ERr, InfectionMatrix
 
 if __name__ == '__main__':
-  #
   # Parse argument
-  #
-
   parser = argparse.ArgumentParser(description='Process SIR simulation with latent states.')
   parser.add_argument('--output', help='output directory', required=True)
   parser.add_argument('--duration', type=int, help='simulation duration in days', required=True)
@@ -289,7 +220,6 @@ if __name__ == '__main__':
   simulation_id=int(args.sim_id)
   cell_id = args.cell_id
 
-
   argsdict = vars(args)
 
   if ( args.output and
@@ -309,41 +239,34 @@ if __name__ == '__main__':
     if not os.path.exists(output_dir):
       os.makedirs(output_dir)
 
-    #
     # Start Simulation
-    #
-    beta = get_beta(densitySubPrefecture_filename,
-             polygonPointsSubPrefecture_filename,
-             subPrefectureNumbering_filename,
-             r,
-             c)
-    (nu, sigma) = get_transition_probability(filenameT)
-    rho = rate_of_return(dim, return_rate)
-    N0 = initial_population(areaSubPrefecture_filename,
-                      densitySubPrefecture_filename,
-                      polygonPointsSubPrefecture_filename,
-                      subPrefectureNumbering_filename,
-                      total_population)
-
-    #
+    beta = get_beta(properties.densitySubPrefectureCensusData,
+             properties.polygonPointsSubPrefectureCensusData,
+             properties.subPrefectureNumbering,
+             properties.r,
+             properties.c)
+    (nu, sigma) = get_transition_probability(properties.transitionProbability)
+    rho = rate_of_return(properties.dim, properties.return_rate)
+    N0 = initial_population(properties.areaSubPrefectureCensusData,
+                      properties.densitySubPrefectureCensusData,
+                      properties.polygonPointsSubPrefectureCensusData,
+                      properties.subPrefectureNumbering,
+                      properties.total_population)
     # Simulation community=0
-    #
     S,I,R,ES,EI,ER,InfectionMatrix = run_simumation(N0,
-                                           dim,
+                                           properties.dim,
                                            tau,
                                            beta,
                                            sigma,
                                            nu,
                                            rho,
                                            gamma,
-                                           total_population,
-                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id)
+                                           properties.total_population,
+                                           simulation_end_time,properties.alphaS,
+                                           properties.alphaI,properties.alphaR,
+                                           muS,muI,muR,deltaEI,cell_id)
     A = InfectionMatrix.T
     save_results(S, I, R, ES, EI, ER, A, output_dir + '/' + str(simulation_id))
-
-    #####################
-    #
     # end Simulation
-    #
   else:
     parser.print_help()
