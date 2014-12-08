@@ -16,15 +16,9 @@ usage: simulation.py
   [--cell-id CELL_ID]
 ```
 #####SIR Simulation with latent states
-```shell
-$ python simulation_latent.py
-usage: simulation.py  
---output OUTPUT
---duration DURATION
-[-h]
-[--tau TAU]
-[--sim-id SIM_ID]
-[--cell-id CELL_ID]
+
+```bash
+$ python simulation_latent.py --output ./output/latent/ --duration 7 --tau $TAU --cell-id 0 --sim-id 1 --mu 0.3
 ```
 
 #####SIR Simulation with latent states and heterogenous return probability
