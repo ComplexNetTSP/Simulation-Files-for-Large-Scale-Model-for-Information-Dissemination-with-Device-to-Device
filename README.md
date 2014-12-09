@@ -15,6 +15,7 @@ In a network of devices in close proximity such as *Device to Device* (**D2D**) 
 ####Usage
 
 Their is three different simulation available in this package:
+
 1. **simulation.py**: is a simple SIR simulation
 2. **simulation_latent.py**: a simple SIR simulation with latent states
 3. **simulation_latent_heterogeneous.py**: a simple SIR simulation with latent states and heterogeneous return probability
