@@ -99,7 +99,8 @@ def get_transition_probability(filename):
     Tarray = np.array(Tlist, dtype=np.float)
     O = np.ones((255, 255)) - np.identity(255)
     Tarray = Tarray * O
-    res1 = Tarray*(1/Tarray.sum(axis=1))
+    with np.errstate(invalid='ignore'):
+        res1 = Tarray*(1/Tarray.sum(axis=1))
     for i in xrange(255):
         for j in xrange(255):
             if np.isnan(res1[i, j]):
@@ -134,7 +135,7 @@ def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulat
     # init the progress bar
     widgets = ['Simulation: ', Percentage(), ' ', Bar(marker=RotatingMarker()),
            ' ', ETA()]
-    pbar = ProgressBar(widgets=widgets, maxval=steps).start()    
+    pbar = ProgressBar(widgets=widgets, maxval=steps).start()
     # Inititial Population in each States
     S = N.copy()
     I = np.zeros((dim, dim))
@@ -199,21 +200,25 @@ if __name__ == '__main__':
       os.makedirs(output_dir)
 
     # Start Simulation
-    beta = get_beta(properties.densitySubPrefectureCensusData,
+    with np.errstate(divide='ignore'):
+        beta = get_beta(properties.densitySubPrefectureCensusData,
              properties.polygonPointsSubPrefectureCensusData,
              properties.subPrefectureNumbering,
              properties.r,
              properties.c)
-    (nu, sigma) = get_transition_probability(properties.transitionProbability)
-    rho = rate_of_return(properties.dim, properties.return_rate)
-    N0 = initial_population(properties.areaSubPrefectureCensusData,
+
+        (nu, sigma) = get_transition_probability(properties.transitionProbability)
+
+        rho = rate_of_return(properties.dim, properties.return_rate)
+
+        N0 = initial_population(properties.areaSubPrefectureCensusData,
                       properties.densitySubPrefectureCensusData,
                       properties.polygonPointsSubPrefectureCensusData,
                       properties.subPrefectureNumbering,
                       properties.total_population)
 
-    # Simulation
-    S, I, R, InfectionMatrix = run_simumation(N0,
+        # Simulation
+        S, I, R, InfectionMatrix = run_simumation(N0,
                                               properties.dim,
                                               tau,
                                               beta,
