@@ -1,4 +1,4 @@
-SIR model with Gillespie (Tau-leap) algorithm [![Zenodo](https://zenodo.org/badge/doi/10.5281/zenodo.13168.svg)](http://dx.doi.org/10.5281/zenodo.13168)
+SIR model with Gillespie (Tau-leap) algorithm [![Zenodo](https://zenodo.org/badge/doi/10.5281/zenodo.13180.svg)](http://dx.doi.org/10.5281/zenodo.13180)
 ===
 ##Paper
 
