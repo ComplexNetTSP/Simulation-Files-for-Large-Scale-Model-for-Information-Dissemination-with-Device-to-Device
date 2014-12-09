@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 
 # -------------------------------------------------------------------------------
@@ -112,7 +113,8 @@ def get_transition_probability(filename):
     Tarray = np.array(Tlist, dtype=np.float)
     O = np.ones((255, 255)) - np.identity(255)
     Tarray = Tarray * O
-    res1 = Tarray*(1/Tarray.sum(axis=1))
+    with np.errstate(invalid='ignore'):
+        res1 = Tarray*(1/Tarray.sum(axis=1))
     for i in xrange(255):
         for j in xrange(255):
             if np.isnan(res1[i, j]):
@@ -253,21 +255,25 @@ if __name__ == '__main__':
       os.makedirs(output_dir)
 
     # Start Simulation
-    beta = get_beta(properties.densitySubPrefectureCensusData,
+    with np.errstate(divide='ignore'):
+        beta = get_beta(properties.densitySubPrefectureCensusData,
              properties.polygonPointsSubPrefectureCensusData,
              properties.subPrefectureNumbering,
              properties.r,
              properties.c)
-    (nu, sigma) = get_transition_probability(properties.transitionProbability)
-    rho = rate_of_return(properties.dim, properties.return_rate)
-    N0 = initial_population(properties.areaSubPrefectureCensusData,
+
+        (nu, sigma) = get_transition_probability(properties.transitionProbability)
+
+        rho = rate_of_return(properties.dim, properties.return_rate)
+
+        N0 = initial_population(properties.areaSubPrefectureCensusData,
                       properties.densitySubPrefectureCensusData,
                       properties.polygonPointsSubPrefectureCensusData,
                       properties.subPrefectureNumbering,
                       properties.total_population)
 
-    # Simulation community=0
-    S,I,R,ES,EI,ER,InfectionMatrix = run_simumation(N0,
+        # Simulation community=0
+        S,I,R,ES,EI,ER,InfectionMatrix = run_simumation(N0,
                                            properties.dim,
                                            tau,
                                            beta,
@@ -278,6 +284,7 @@ if __name__ == '__main__':
                                            simulation_end_time,properties.alphaS,
                                            properties.alphaI,properties.alphaR,
                                            muS,muI,muR,properties.deltaEI,cell_id)
+
     A = InfectionMatrix.T
     save_results(S, I, R, ES, EI, ER, A, output_dir + '/' + str(simulation_id))
 
