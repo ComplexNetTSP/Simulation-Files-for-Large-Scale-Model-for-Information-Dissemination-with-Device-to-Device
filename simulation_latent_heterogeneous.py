@@ -43,11 +43,12 @@ from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 # Global Definition
 #
 
-#Transition Probability file name
+# Transition Probability file name
 filenameT = 'Transitions/transitionprob.p'
 degree_filename = 'Transitions/degree.p'
-#Initial Census Data
-filenameC = 'PopulationCensus/populationCensusData'
+
+# Initial Census Data
+filenameC = 'PopulationCensus/populationCensusData.p'
 areaSubPrefecture_filename = 'PopulationCensus/areaSubPrefectureCensusData.p'
 densitySubPrefecture_filename = 'PopulationCensus/densitySubPrefectureCensusData.p'
 polygonPointsSubPrefecture_filename = 'PopulationCensus/polygonPointsSubPrefectureCensusData.p'
@@ -60,34 +61,21 @@ dim = 255
 total_population = 15686986
 
 # Probability of message transimision per contact
-#c=0.8
+
 c=np.zeros(dim)
 for i in range(dim):
-    c[i]=0.8
+    c[i] = 0.8
 
 # Radius of transmision in km
 r = 100.0/1000.0
 
-# Recovery rate
-gamma = 1.0/3.0
-
 # Return Rate
 return_rate = 1.0/0.5
 
-# Simulation End Time in Days
-
 # alphaS, alphaI, alphaR
-alphaS = 1./0.5 #1.0/0.5
-alphaI = 1./0.5 #1.0/0.5
-alphaR = 1./0.5 #1.0/0.5
-
-# muS, muI, muR
-#muS = 1.0/10.0 #1.0/0.5
-#muI = 1.0/10.0 #1.0/0.5
-#muR = 1.0/10.0 #1.0/0.5
-
-#EI to R
-deltaEI = gamma #1.0/3.0
+alphaS = 1./0.5
+alphaI = 1./0.5
+alphaR = 1./0.5
 
 ###############################################################################
 # End of Global Definition
@@ -182,9 +170,6 @@ def get_transition_probability(filename):
     return res1, res2
 
 def rate_of_return(dim, rate):
-
-    #with open(densitySubPrefecture_filename, "rb") as pickleFile:
-    #    RhoPolygons = p.load(pickleFile)
     with open(polygonPointsSubPrefecture_filename, "rb") as pickleFile:
         PolygonPoints = p.load(pickleFile)
         community = len(PolygonPoints.keys())
@@ -296,7 +281,7 @@ if __name__ == '__main__':
   parser.add_argument('--mu', type=float, help='simulation mu for latent state (fraction of the population)', default=1.0/10)
   parser.add_argument('--sim-id', type=int, help='simulation step (fraction of day)', default=1.0/5)
   parser.add_argument('--cell-id', type=int, help='initial cellID', default=0)
-
+  parser.add_argument('--gamma', type=float, help='recovery rate', default=1.0/3.0)
 
   args = parser.parse_args()
   # Simualtion parameters
@@ -306,8 +291,12 @@ if __name__ == '__main__':
   muS = float(args.mu)
   muI = float(args.mu)
   muR = float(args.mu)
+  gamma = float(args.gamma)
   simulation_id=int(args.sim_id)
   cell_id = args.cell_id
+
+  # EI to R
+  deltaEI = gamma
 
   argsdict = vars(args)
 

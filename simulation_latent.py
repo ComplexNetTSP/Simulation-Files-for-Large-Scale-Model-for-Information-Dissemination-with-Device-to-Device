@@ -60,17 +60,13 @@ dim = 255
 total_population = 15686986
 
 # Probability of message transimision per contact
-#c=0.8
 c=np.zeros(dim)
+
 for i in range(dim):
     c[i]=0.8
 
 # Radius of transmision in km
 r = 100.0/1000.0
-
-# Recovery rate
-gamma = 1.0/3.0
-
 # Return Rate
 return_rate = 1.0/0.5
 
@@ -269,7 +265,7 @@ if __name__ == '__main__':
   parser.add_argument('--mu', type=float, help='simulation mu for latent state (fraction of the population)', default=1.0/10)
   parser.add_argument('--sim-id', type=int, help='simulation step (fraction of day)', default=1.0/5)
   parser.add_argument('--cell-id', type=int, help='initial cellID', default=0)
-  parser.add_argument('--gamma', type=float, help='initial cellID', default=1.0/3.0)
+  parser.add_argument('--gamma', type=float, help='recovery rate', default=1.0/3.0)
 
   args = parser.parse_args()
   # Simualtion parameters
@@ -280,8 +276,10 @@ if __name__ == '__main__':
   muI = float(args.mu)
   muR = float(args.mu)
   gamma = float(args.gamma)
-  #EI to R
+
+  # EI to R
   deltaEI = gamma
+
   simulation_id=int(args.sim_id)
   cell_id = args.cell_id
 
