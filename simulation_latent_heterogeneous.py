@@ -168,7 +168,8 @@ def get_transition_probability(filename):
     O = np.ones((255, 255)) - np.identity(255)
     Tarray = Tarray * O
 
-    res1 = Tarray*(1/Tarray.sum(axis=1))
+    with np.errstate(invalid='ignore'):
+        res1 = Tarray*(1/Tarray.sum(axis=1))
 
     for i in xrange(255):
         for j in xrange(255):
@@ -330,18 +331,24 @@ if __name__ == '__main__':
     #
     # Start Simulation
     #
-    beta,k = get_beta(densitySubPrefecture_filename,
-             polygonPointsSubPrefecture_filename,
-             subPrefectureNumbering_filename,
-             r,
-             c)
-    (nu, sigma) = get_transition_probability(filenameT)
+    beta,k = get_beta(
+        densitySubPrefecture_filename,
+        polygonPointsSubPrefecture_filename,
+        subPrefectureNumbering_filename,
+        r,
+        c)
+
+    with np.errstate(divide='ignore'):
+        (nu, sigma) = get_transition_probability(filenameT)
+
     rho = rate_of_return(dim, return_rate)
-    N0 = initial_population(areaSubPrefecture_filename,
-                      densitySubPrefecture_filename,
-                      polygonPointsSubPrefecture_filename,
-                      subPrefectureNumbering_filename,
-                      total_population)
+
+    N0 = initial_population(
+        areaSubPrefecture_filename,
+        densitySubPrefecture_filename,
+        polygonPointsSubPrefecture_filename,
+        subPrefectureNumbering_filename,
+        total_population)
 
     #
     # Simulation community=0
