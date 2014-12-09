@@ -85,10 +85,10 @@ def get_beta(densitySubPrefecture_filename,
     beta = np.zeros(community)
     k = np.zeros(255)
     for i in listing:
-      k[ConnectionNumber[i]-1] = RhoPolygons[i]*(np.pi)*r**2
-      beta[ConnectionNumber[i]-1] = -k[ConnectionNumber[i]-1]*np.log(1-c[ConnectionNumber[i]-1])
-      #beta[ConnectionNumber[i]-1] = np.log(1-c[ConnectionNumber[i]-1])
-    return beta, k
+      k = RhoPolygons[i]*(np.pi)*r**2
+      beta[ConnectionNumber[i]-1] = -k*np.log(1-c[ConnectionNumber[i]-1])
+
+    return beta
 
 
 def initial_population(areaSubPrefecture_filename,
@@ -137,17 +137,10 @@ def get_transition_probability(filename):
     res2 = Tarray.sum(axis=1)/Tarray.sum()
     return res1, res2
 
-def rate_of_return(dim, rate):
-    with open(polygonPointsSubPrefecture_filename, "rb") as pickleFile:
-        PolygonPoints = p.load(pickleFile)
-        community = len(PolygonPoints.keys())
-        listing = PolygonPoints.keys()
-    with open(subPrefectureNumbering_filename, "rb") as pickleFile:
-        ConnectionNumber = p.load(pickleFile)
+def rate_of_return(dim, rate, Khi, degree_filename):
     with open(degree_filename, 'rb') as pickleFile:
       k = p.load(pickleFile)
 
-    Khi = -0.5
     kmean = np.mean(np.array(k, dtype=np.float))
 
     rho = np.zeros((dim, dim))
@@ -250,6 +243,7 @@ if __name__ == '__main__':
   parser.add_argument('--sim-id', type=int, help='simulation step (fraction of day)', default=1.0/5)
   parser.add_argument('--cell-id', type=int, help='initial cellID', default=0)
   parser.add_argument('--gamma', type=float, help='recovery rate', default=1.0/3.0)
+  parser.add_argument('--khi', type=float, help='khi recovery rate', default=-0.5)
 
   args = parser.parse_args()
   # Simualtion parameters
@@ -261,6 +255,7 @@ if __name__ == '__main__':
   muI = float(args.mu)
   muR = float(args.mu)
   gamma = float(args.gamma)
+  khi = float(args.khi)
   simulation_id=int(args.sim_id)
   cell_id = args.cell_id
 
@@ -289,40 +284,44 @@ if __name__ == '__main__':
     #
     # Start Simulation
     #
-    beta,k = get_beta(
-        densitySubPrefecture_filename,
-        polygonPointsSubPrefecture_filename,
-        subPrefectureNumbering_filename,
-        r,
-        c)
+    beta = get_beta(
+        properties.densitySubPrefectureCensusData,
+        properties.polygonPointsSubPrefectureCensusData,
+        properties.subPrefectureNumbering,
+        properties.r,
+        properties.c)
 
     with np.errstate(divide='ignore'):
-        (nu, sigma) = get_transition_probability(filenameT)
+        (nu, sigma) = get_transition_probability(properties.transitionProbability)
 
-    rho = rate_of_return(dim, return_rate)
+    rho = rate_of_return(
+        properties.dim,
+        properties.return_rate,
+        khi,
+        properties.graphDegree)
 
     N0 = initial_population(
-        areaSubPrefecture_filename,
-        densitySubPrefecture_filename,
-        polygonPointsSubPrefecture_filename,
-        subPrefectureNumbering_filename,
-        total_population)
+        properties.areaSubPrefectureCensusData,
+        properties.densitySubPrefectureCensusData,
+        properties.polygonPointsSubPrefectureCensusData,
+        properties.subPrefectureNumbering,
+        properties.total_population)
 
     #
     # Simulation community=0
     #
     S,I,R,ES,EI,ER,InfectionMatrix = run_simulation(N0,
-                                                    dim,
+                                                    properties.dim,
                                                     tau,
                                                     beta,
                                                     sigma,
                                                     nu,
                                                     rho,
-                                                    total_population,
+                                                    properties.total_population,
                                                     simulation_end_time,
-                                                    alphaS,
-                                                    alphaI,
-                                                    alphaR,
+                                                    properties.alphaS,
+                                                    properties.alphaI,
+                                                    properties.alphaR,
                                                     muS,
                                                     muI,
                                                     muR,

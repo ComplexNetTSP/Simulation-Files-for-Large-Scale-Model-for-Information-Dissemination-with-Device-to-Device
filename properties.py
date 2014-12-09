@@ -8,7 +8,7 @@ import numpy as np
 
 # Transition Probability file name
 transitionProbability = 'Transitions/transitionprob.p'
-degree_filename = 'Transitions/degree.p'
+graphDegree = 'Transitions/degree.p'
 
 # Initial Census Data
 populationCensusData = 'PopulationCensus/populationCensusData.p'
