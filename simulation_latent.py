@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 
 # -------------------------------------------------------------------------------
@@ -157,7 +158,10 @@ def get_transition_probability(filename):
     Tarray = np.array(Tlist, dtype=np.float)
     O = np.ones((255, 255)) - np.identity(255)
     Tarray = Tarray * O
-    res1 = Tarray*(1/Tarray.sum(axis=1))
+
+    with np.errstate(invalid='ignore'):
+        res1 = Tarray*(1/Tarray.sum(axis=1))
+
     for i in xrange(255):
         for j in xrange(255):
             if np.isnan(res1[i, j]):
