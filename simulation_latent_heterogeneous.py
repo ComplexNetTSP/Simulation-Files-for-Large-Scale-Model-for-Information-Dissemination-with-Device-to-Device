@@ -29,57 +29,25 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 #
 # Imports
 #
+
 import os
 import pickle as p
 import numpy as np
-#import pylab as plt
-import shapefile
+
 import argparse
-#from numba import jit
 
 from tau_leap_latent import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
-###############################################################################
-# Global Definition
+
+# import global variables
+import properties
+
+################################################################################
 #
-
-# Transition Probability file name
-filenameT = 'Transitions/transitionprob.p'
-degree_filename = 'Transitions/degree.p'
-
-# Initial Census Data
-filenameC = 'PopulationCensus/populationCensusData.p'
-areaSubPrefecture_filename = 'PopulationCensus/areaSubPrefectureCensusData.p'
-densitySubPrefecture_filename = 'PopulationCensus/densitySubPrefectureCensusData.p'
-polygonPointsSubPrefecture_filename = 'PopulationCensus/polygonPointsSubPrefectureCensusData.p'
-subPrefectureNumbering_filename = 'PopulationCensus/subPrefectureNumberingCensusData.p'
-
-# Number of region
-dim = 255
-
-# Total Population
-total_population = 15686986
-
-# Probability of message transimision per contact
-
-c=np.zeros(dim)
-for i in range(dim):
-    c[i] = 0.8
-
-# Radius of transmision in km
-r = 100.0/1000.0
-
-# Return Rate
-return_rate = 1.0/0.5
-
-# alphaS, alphaI, alphaR
-alphaS = 1./0.5
-alphaI = 1./0.5
-alphaR = 1./0.5
-
-###############################################################################
-# End of Global Definition
+# Function Definition
 #
+################################################################################
+
 
 def save_results(S, I, R, ES, EI, ER, A, directory='Results'):
     if not os.path.exists(directory):
@@ -274,7 +242,7 @@ if __name__ == '__main__':
   # Parse argument
   #
 
-  parser = argparse.ArgumentParser(description='Process SIR simulation with latent states.')
+  parser = argparse.ArgumentParser(description='Process SIR simulation with latent states and heterogeneous return probability')
   parser.add_argument('--output', help='output directory', required=True)
   parser.add_argument('--duration', type=int, help='simulation duration in days', required=True)
   parser.add_argument('--tau', type=float, help='simulation step (fraction of day)', default=1.0/5)
@@ -286,6 +254,7 @@ if __name__ == '__main__':
   args = parser.parse_args()
   # Simualtion parameters
   simulation_end_time = float(args.duration)
+
   # Simulation Step
   tau = float(args.tau)
   muS = float(args.mu)

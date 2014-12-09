@@ -23,8 +23,8 @@ Their is three different simulation available in this package:
 ##### Install
 ```shell
 $ tar zxvf archive.tar.gz
-cd archive
-pip install -r requirements.txt
+$ cd archive
+$ pip install -r requirements.txt
 ```
 
 ##### Command line of the simulator
@@ -36,7 +36,7 @@ usage: simulation_latent_heterogeneous.py [-h]
                                           [--sim-id SIM_ID]
                                           [--cell-id CELL_ID]
 
-Process SIR simulation with latent states.
+Process SIR simulation with latent states and heterogeneous return probability.
 
 optional arguments:
 -h, --help           show this help message and exit
@@ -50,6 +50,6 @@ optional arguments:
 ```
 #####Example of SIR Simulation with latent states
 
-```bash
+```shell
 $ python simulation_latent.py --output ./output/latent/ --duration 7 --tau 0.1 --cell-id 0 --sim-id 1 --mu 0.3
 ```
