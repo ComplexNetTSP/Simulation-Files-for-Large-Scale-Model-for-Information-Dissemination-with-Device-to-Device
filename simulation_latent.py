@@ -308,32 +308,46 @@ if __name__ == '__main__':
     #
     # Start Simulation
     #
-    beta = get_beta(densitySubPrefecture_filename,
-             polygonPointsSubPrefecture_filename,
-             subPrefectureNumbering_filename,
-             r,
-             c)
-    (nu, sigma) = get_transition_probability(filenameT)
+    beta = get_beta(
+        densitySubPrefecture_filename,
+        polygonPointsSubPrefecture_filename,
+        subPrefectureNumbering_filename,
+        r,
+        c)
+
+    with np.errstate(divide='ignore'):
+        (nu, sigma) = get_transition_probability(filenameT)
+
     rho = rate_of_return(dim, return_rate)
-    N0 = initial_population(areaSubPrefecture_filename,
-                      densitySubPrefecture_filename,
-                      polygonPointsSubPrefecture_filename,
-                      subPrefectureNumbering_filename,
-                      total_population)
+
+    N0 = initial_population(
+        areaSubPrefecture_filename,
+        densitySubPrefecture_filename,
+        polygonPointsSubPrefecture_filename,
+        subPrefectureNumbering_filename,
+        total_population)
 
     #
     # Simulation community=0
     #
     S,I,R,ES,EI,ER,InfectionMatrix = run_simumation(N0,
-                                           dim,
-                                           tau,
-                                           beta,
-                                           sigma,
-                                           nu,
-                                           rho,
-                                           gamma,
-                                           total_population,
-                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id)
+                                                    dim,
+                                                    tau,
+                                                    beta,
+                                                    sigma,
+                                                    nu,
+                                                    rho,
+                                                    gamma,
+                                                    total_population,
+                                                    simulation_end_time,
+                                                    alphaS,
+                                                    alphaI,
+                                                    alphaR,
+                                                    muS,
+                                                    muI,
+                                                    muR,
+                                                    deltaEI,
+                                                    cell_id)
     A = InfectionMatrix.T
     save_results(S, I, R, ES, EI, ER, A, output_dir + '/' + str(simulation_id))
 
