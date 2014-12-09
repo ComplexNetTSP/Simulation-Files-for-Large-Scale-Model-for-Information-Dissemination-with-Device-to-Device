@@ -167,7 +167,9 @@ def get_transition_probability(filename):
     Tarray = np.array(Tlist, dtype=np.float)
     O = np.ones((255, 255)) - np.identity(255)
     Tarray = Tarray * O
+
     res1 = Tarray*(1/Tarray.sum(axis=1))
+
     for i in xrange(255):
         for j in xrange(255):
             if np.isnan(res1[i, j]):
@@ -215,8 +217,7 @@ def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population)
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
 #
-#@jit
-def run_simumation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
+def run_simulation(N0, dim, tau, beta, sigma, nu, rho, total_population, simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,initialInfectedCommunity):
     # Steps
     steps = int(simulation_end_time*(1.0/tau))
     # Compute the initial population distribution
@@ -345,15 +346,23 @@ if __name__ == '__main__':
     #
     # Simulation community=0
     #
-    S,I,R,ES,EI,ER,InfectionMatrix = run_simumation(N0,
-                                           dim,
-                                           tau,
-                                           beta,
-                                           sigma,
-                                           nu,
-                                           rho,
-                                           total_population,
-                                           simulation_end_time,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI,cell_id)
+    S,I,R,ES,EI,ER,InfectionMatrix = run_simulation(N0,
+                                                    dim,
+                                                    tau,
+                                                    beta,
+                                                    sigma,
+                                                    nu,
+                                                    rho,
+                                                    total_population,
+                                                    simulation_end_time,
+                                                    alphaS,
+                                                    alphaI,
+                                                    alphaR,
+                                                    muS,
+                                                    muI,
+                                                    muR,
+                                                    deltaEI,
+                                                    cell_id)
     A = InfectionMatrix.T
     save_results(S, I, R, ES, EI, ER, A, output_dir + '/' + str(simulation_id))
 
