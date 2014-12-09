@@ -33,53 +33,12 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 import os
 import pickle as p
 import numpy as np
-import pylab as plt
-import shapefile
 import argparse
 
 from tau_leap_latent import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
-###############################################################################
-# Global Definition
-#
 
-#Transition Probability file name
-filenameT = 'Transitions/transitionprob.p'
-
-#Initial Census Data
-filenameC = 'PopulationCensus/populationCensusData'
-areaSubPrefecture_filename = 'PopulationCensus/areaSubPrefectureCensusData.p'
-densitySubPrefecture_filename = 'PopulationCensus/densitySubPrefectureCensusData.p'
-polygonPointsSubPrefecture_filename = 'PopulationCensus/polygonPointsSubPrefectureCensusData.p'
-subPrefectureNumbering_filename = 'PopulationCensus/subPrefectureNumberingCensusData.p'
-
-# Number of region
-dim = 255
-
-# Total Population
-total_population = 15686986
-
-# Probability of message transimision per contact
-c=np.zeros(dim)
-
-for i in range(dim):
-    c[i]=0.8
-
-# Radius of transmision in km
-r = 100.0/1000.0
-# Return Rate
-return_rate = 1.0/0.5
-
-# Simulation End Time in Days
-
-# alphaS, alphaI, alphaR
-alphaS = 1./0.5
-alphaI = 1./0.5
-alphaR = 1./0.5
-
-###############################################################################
-# End of Global Definition
-#
+import properties
 
 def save_results(S, I, R, ES, EI, ER, A, directory='Results'):
     if not os.path.exists(directory):
@@ -286,13 +245,13 @@ if __name__ == '__main__':
 
   argsdict = vars(args)
 
-  if ( args.output and
+  if( args.output and
       args.mu and
       args.tau and
       args.duration and
       args.mu and
       args.sim_id
-    ) :
+    ):
 
     output_dir = argsdict['output']
 
@@ -307,40 +266,40 @@ if __name__ == '__main__':
     # Start Simulation
     #
     beta = get_beta(
-        densitySubPrefecture_filename,
-        polygonPointsSubPrefecture_filename,
-        subPrefectureNumbering_filename,
-        r,
-        c)
+        properties.densitySubPrefectureCensusData,
+        properties.polygonPointsSubPrefectureCensusData,
+        properties.subPrefectureNumbering,
+        properties.r,
+        properties.c)
 
     with np.errstate(divide='ignore'):
-        (nu, sigma) = get_transition_probability(filenameT)
+        (nu, sigma) = get_transition_probability(properties.transitionProbability)
 
-    rho = rate_of_return(dim, return_rate)
+    rho = rate_of_return(properties.dim, properties.return_rate)
 
     N0 = initial_population(
-        areaSubPrefecture_filename,
-        densitySubPrefecture_filename,
-        polygonPointsSubPrefecture_filename,
-        subPrefectureNumbering_filename,
-        total_population)
+        properties.areaSubPrefectureCensusData,
+        properties.densitySubPrefectureCensusData,
+        properties.polygonPointsSubPrefectureCensusData,
+        properties.subPrefectureNumbering,
+        properties.total_population)
 
     #
     # Simulation community=0
     #
     S,I,R,ES,EI,ER,InfectionMatrix = run_simumation(N0,
-                                                    dim,
+                                                    properties.dim,
                                                     tau,
                                                     beta,
                                                     sigma,
                                                     nu,
                                                     rho,
                                                     gamma,
-                                                    total_population,
+                                                    properties.total_population,
                                                     simulation_end_time,
-                                                    alphaS,
-                                                    alphaI,
-                                                    alphaR,
+                                                    properties.alphaS,
+                                                    properties.alphaI,
+                                                    properties.alphaR,
                                                     muS,
                                                     muI,
                                                     muR,

@@ -7,15 +7,15 @@
 import numpy as np
 
 # Transition Probability file name
-filenameT = 'Transitions/transitionprob.p'
+transitionProbability = 'Transitions/transitionprob.p'
 degree_filename = 'Transitions/degree.p'
 
 # Initial Census Data
-filenameC = 'PopulationCensus/populationCensusData.p'
-areaSubPrefecture_filename = 'PopulationCensus/areaSubPrefectureCensusData.p'
+populationCensusData = 'PopulationCensus/populationCensusData.p'
+areaSubPrefectureCensusData = 'PopulationCensus/areaSubPrefectureCensusData.p'
 densitySubPrefectureCensusData = 'PopulationCensus/densitySubPrefectureCensusData.p'
-polygonPointsSubPrefecture_filename = 'PopulationCensus/polygonPointsSubPrefectureCensusData.p'
-subPrefectureNumbering_filename = 'PopulationCensus/subPrefectureNumberingCensusData.p'
+polygonPointsSubPrefectureCensusData = 'PopulationCensus/polygonPointsSubPrefectureCensusData.p'
+subPrefectureNumbering = 'PopulationCensus/subPrefectureNumberingCensusData.p'
 
 # Number of region
 dim = 255
