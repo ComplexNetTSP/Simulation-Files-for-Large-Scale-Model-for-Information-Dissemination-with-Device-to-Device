@@ -73,7 +73,9 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
     Sy = S.copy()
     Iy = I.copy()
     Ry = R.copy()
+    #
     # Compute the mobilty transitions
+    #
 
     # for each community
     Rate = np.zeros((dim,dim,8))
@@ -81,6 +83,7 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
         for j in range(dim):
             if i != j:
                 # Suceptible departing from i to j
+                #print i,j,(rho[i,j]*Sy[i,j])*tau
                 Rate[i, j, 0] = min(poisson((rho[i,j]*Sy[i, j])*tau), Sy[i,j])
                 # Infected departing from i to j
                 Rate[i,j,2] = min(poisson((rho[i,j]*Iy[i,j])*tau), Iy[i,j])
@@ -104,8 +107,9 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim):
                     Iy[i,jj] += Rate[i,jj,6]
                     Ry[i,i] -= Rate[i,jj,7]
                     Ry[i,jj] += Rate[i,jj,7]
-                    
+    #
     # Compute the infection dynamic
+    #
     for i in xrange(dim):
         for j in xrange(dim):
             # Suceptible becaming infected

@@ -83,7 +83,9 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
     ESy = ES.copy()
     EIy = EI.copy()
     ERy = ER.copy()
+    #
     # Compute the mobilty transitions
+    #
 
     # for each community
     Rate = np.zeros((dim,dim,21))
@@ -91,64 +93,65 @@ def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,m
       for j in range(dim):
         if i != j:
           # Suceptible departing from i to j
+          #print i,j,(rho[i,j]*Sy[i,j])*tau
           Rate[i,j,0] = min(poisson((rho[i,j]*Sy[i,j])*tau), Sy[i,j])
-          # Infected departing from i to j
-          Rate[i,j,2] = min(poisson((rho[i,j]*Iy[i,j])*tau), Iy[i,j])
-          # Recovered departing from i to j
-          Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
-          # E_Suceptible departing from i to j
-          Rate[i,j,8] = min(poisson((rho[i,j]*ESy[i,j])*tau), ESy[i,j])
-          # EInfected departing from i to j
-          Rate[i,j,9] = min(poisson((rho[i,j]*EIy[i,j])*tau), EIy[i,j])
-          # ERecovered departing from i to j
-          Rate[i,j,10] = min(poisson((rho[i,j]*ERy[i,j])*tau), ERy[i,j])
-          
           Sy[i,j] -= Rate[i,j,0]
           Sy[i,i] += Rate[i,j,0]
 
+          # Infected departing from i to j
+          Rate[i,j,2] = min(poisson((rho[i,j]*Iy[i,j])*tau), Iy[i,j])
           Iy[i,j] -= Rate[i,j,2]
           Iy[i,i] += Rate[i,j,2]
 
+          # Recovered departing from i to j
+          Rate[i,j,4] = min(poisson((rho[i,j]*Ry[i,j])*tau), Ry[i,j])
           Ry[i,j] -= Rate[i,j,4]
           Ry[i,i] += Rate[i,j,4]
 
+          # E_Suceptible departing from i to j
+          Rate[i,j,8] = min(poisson((rho[i,j]*ESy[i,j])*tau), ESy[i,j])
           ESy[i,j] -= Rate[i,j,8]
           ESy[i,i] += Rate[i,j,8]
 
+          # EInfected departing from i to j
+          Rate[i,j,9] = min(poisson((rho[i,j]*EIy[i,j])*tau), EIy[i,j])
           EIy[i,j] -= Rate[i,j,9]
           EIy[i,i] += Rate[i,j,9]
 
+          # ERecovered departing from i to j
+          Rate[i,j,10] = min(poisson((rho[i,j]*ERy[i,j])*tau), ERy[i,j])
           ERy[i,j] -= Rate[i,j,10]
           ERy[i,i] += Rate[i,j,10]
         else:
           # All possible outgoing
           for jj in xrange(dim):
             Rate[i,jj,5] = min(poisson((sigma[i]*nu[i,jj]*Sy[i,i])*tau), Sy[i,i])
-            Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
-            Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
-            Rate[i,jj,11] = min(poisson((sigma[i]*nu[i,jj]*ESy[i,i])*tau), ESy[i,i])
-            Rate[i,jj,12] = min(poisson((sigma[i]*nu[i,jj]*EIy[i,i])*tau), EIy[i,i])
-            Rate[i,jj,13] = min(poisson((sigma[i]*nu[i,jj]*ERy[i,i])*tau), ERy[i,i])
-            
             Sy[i,i] -= Rate[i,jj,5]
             Sy[i,jj] += Rate[i,jj,5]
 
+            Rate[i,jj,6] = min(poisson((sigma[i]*nu[i,jj]*Iy[i,i])*tau), Iy[i,i])
             Iy[i,i] -= Rate[i,jj,6]
             Iy[i,jj] += Rate[i,jj,6]
 
+            Rate[i,jj,7] = min(poisson((sigma[i]*nu[i,jj]*Ry[i,i])*tau), Ry[i,i])
             Ry[i,i] -= Rate[i,jj,7]
             Ry[i,jj] += Rate[i,jj,7]
 
+            Rate[i,jj,11] = min(poisson((sigma[i]*nu[i,jj]*ESy[i,i])*tau), ESy[i,i])
             ESy[i,i] -= Rate[i,jj,11]
             ESy[i,jj] += Rate[i,jj,11]
 
+            Rate[i,jj,12] = min(poisson((sigma[i]*nu[i,jj]*EIy[i,i])*tau), EIy[i,i])
             EIy[i,i] -= Rate[i,jj,12]
             EIy[i,jj] += Rate[i,jj,12]
 
+            Rate[i,jj,13] = min(poisson((sigma[i]*nu[i,jj]*ERy[i,i])*tau), ERy[i,i])
             ERy[i,i] -= Rate[i,jj,13]
             ERy[i,jj] += Rate[i,jj,13]
 
+    #
     # Compute the infection dynamic
+    #
     for i in xrange(dim):
       for j in xrange(dim):
         boundaryCondition_Sy = 0
