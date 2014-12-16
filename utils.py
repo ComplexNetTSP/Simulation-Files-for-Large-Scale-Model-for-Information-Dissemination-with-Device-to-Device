@@ -33,8 +33,9 @@ def get_beta(densitySubPrefecture_filename,
 
     beta = np.zeros(community)
     for i in listing:
-        k = RhoPolygons[i]*(np.pi)*r**2
-        beta[ConnectionNumber[i]-1] = -k*np.log(1-c[ConnectionNumber[i]-1])
+        k = RhoPolygons[i] * (np.pi) * r ** 2
+        beta[ConnectionNumber[i] - 1] = -k * \
+            np.log(1 - c[ConnectionNumber[i] - 1])
 
     return beta
 
@@ -122,3 +123,32 @@ def compute_population_at_equilibrium(
         N[i, :] = np.floor(
             population_at_equilibrum(i, sigma, nu, rho, Ni[i]) * total_population)
     return N
+
+###############################################################################
+#
+# Function compute_population_at_equilibrium
+#
+###############################################################################
+
+
+def initial_population(areaSubPrefecture_filename,
+                       densitySubPrefecture_filename,
+                       polygonPointsSubPrefecture_filename,
+                       subPrefectureNumbering_filename,
+                       Totalpopulation):
+
+    with open(areaSubPrefecture_filename, "rb") as pickleFile:
+        AreaPolygons = p.load(pickleFile)
+    with open(densitySubPrefecture_filename, "rb") as pickleFile:
+        RhoPolygons = p.load(pickleFile)
+    with open(polygonPointsSubPrefecture_filename, "rb") as pickleFile:
+        PolygonPoints = p.load(pickleFile)
+        community = len(PolygonPoints.keys())
+        listing = PolygonPoints.keys()
+    with open(subPrefectureNumbering_filename, "rb") as pickleFile:
+        ConnectionNumber = p.load(pickleFile)
+    N0 = np.zeros(community)
+    for i in listing:
+        N0[ConnectionNumber[i] - 1] = AreaPolygons[i] * \
+            RhoPolygons[i] / float(Totalpopulation)
+    return np.identity(community) * N0

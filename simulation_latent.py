@@ -37,8 +37,8 @@ from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 #
 # Custom imports
 #
-from tau_leap_latent import stoc_eqs, initial_population
-from utils import get_beta, save_results, get_transition_probability, compute_population_at_equilibrium
+from tau_leap_latent import stoc_eqs
+from utils import *
 import properties
 
 ###############################################################################
@@ -56,9 +56,11 @@ def rate_of_return(dim, rate):
                 rho[i, j] = rate
     return rho
 
+###############################################################################
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
 #
+###############################################################################
 
 
 def run_simumation(

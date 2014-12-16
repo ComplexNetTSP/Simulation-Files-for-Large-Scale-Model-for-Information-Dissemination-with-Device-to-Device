@@ -27,9 +27,7 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 
 import numpy as np
 from numpy.random import poisson
-#from numba import jit
 
-#@jit
 def division_safe(a,b):
     c = np.zeros((a.size,))
     for i in xrange(c.size):
@@ -39,7 +37,6 @@ def division_safe(a,b):
             c[i] = 0.0
     return c
 
-#@jit
 def population_at_equilibrum(i, sigma, nu, rho, Ni):
     '''
     Definition:
@@ -58,7 +55,6 @@ def population_at_equilibrum(i, sigma, nu, rho, Ni):
         N[j] = Ni/(1.0 + sigma[i] * division_safe(nu[i,:],rho[i,:]).sum())
     return N
 
-#@jit
 def stoc_eqs(Y, tau, beta, gamma, sigma, nu, rho, dim,alphaS,alphaI,alphaR,muS,muI,muR,deltaEI):
     '''
     Definition:
