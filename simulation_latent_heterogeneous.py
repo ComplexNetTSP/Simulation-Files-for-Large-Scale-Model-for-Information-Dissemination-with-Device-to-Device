@@ -186,10 +186,9 @@ if __name__ == '__main__':
         '--khi', type=float, help='khi recovery rate', default=-0.5)
 
     args = parser.parse_args()
+
     # Simualtion parameters
     simulation_end_time = float(args.duration)
-
-    # Simulation Step
     tau = float(args.tau)
     muS = float(args.mu)
     muI = float(args.mu)
@@ -199,6 +198,7 @@ if __name__ == '__main__':
     simulation_id = int(args.sim_id)
     cell_id = args.cell_id
     deltaEI = gamma
+
     argsdict = vars(args)
 
     conditions_met = (

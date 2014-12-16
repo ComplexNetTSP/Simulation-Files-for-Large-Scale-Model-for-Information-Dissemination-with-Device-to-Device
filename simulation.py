@@ -37,7 +37,7 @@ from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 #
 # Custom imports
 #
-from tau_leap_latent import stoc_eqs
+from tau_leap import stoc_eqs
 from utils import *
 import properties
 
@@ -129,6 +129,8 @@ if __name__ == '__main__':
         '--sim-id', type=int, help='simulation step (fraction of day)', default=1.0 / 5)
     parser.add_argument(
         '--cell-id', type=int, help='initial cellID', default=0)
+    parser.add_argument(
+        '--gamma', type=float, help='recovery rate', default=1.0 / 3.0)
 
     args = parser.parse_args()
 
@@ -137,6 +139,9 @@ if __name__ == '__main__':
     tau = float(args.tau)
     simulation_id = int(args.sim_id)
     cell_id = int(args.cell_id)
+    gamma = float(args.gamma)
+    cell_id = args.cell_id
+
     argsdict = vars(args)
 
     conditions_mets = (
@@ -164,7 +169,9 @@ if __name__ == '__main__':
                         properties.r,
                         properties.c)
 
-        (nu, sigma) = get_transition_probability(properties.transitionProbability)
+        with np.errstate(divide='ignore'):
+            (nu, sigma) = get_transition_probability(
+                properties.transitionProbability)
 
         rho = rate_of_return(properties.dim, properties.return_rate)
 
@@ -178,7 +185,7 @@ if __name__ == '__main__':
         # Simulation
         #
         S, I, R, InfectionMatrix = run_simumation(N0,
-                                                  dim,
+                                                  properties.dim,
                                                   tau,
                                                   beta,
                                                   sigma,
