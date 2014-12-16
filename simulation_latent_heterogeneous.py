@@ -198,18 +198,19 @@ if __name__ == '__main__':
     khi = float(args.khi)
     simulation_id = int(args.sim_id)
     cell_id = args.cell_id
-
-    # EI to R
     deltaEI = gamma
-
     argsdict = vars(args)
 
-    if (args.output and
-            args.mu and
-            args.tau and
-            args.duration and
-            args.mu and
-            args.sim_id):
+    conditions_met = (
+        args.output and
+        args.mu and
+        args.tau and
+        args.duration and
+        args.mu and
+        args.sim_id
+    )
+
+    if conditions_met:
 
         output_dir = argsdict['output']
 
