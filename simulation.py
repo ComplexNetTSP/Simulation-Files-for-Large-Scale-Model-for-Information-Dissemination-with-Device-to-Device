@@ -160,7 +160,6 @@ def rate_of_return(dim, rate):
                 rho[i, j] = rate
     return rho
 
-
 def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population):
     N = np.zeros((dim, dim))
     for i in range(dim):

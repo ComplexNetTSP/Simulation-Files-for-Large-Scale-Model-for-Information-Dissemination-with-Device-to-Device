@@ -1,8 +1,18 @@
-################################################################################
+import pickle as p
+import numpy as np
+import os
+
+#
+# Custom function import
+#
+from tau_leap_latent import population_at_equilibrum
+
+###############################################################################
 #
 # Function Get beta
 #
-################################################################################
+###############################################################################
+
 
 def get_beta(densitySubPrefecture_filename,
              polygonPointsSubPrefecture_filename,
@@ -28,41 +38,45 @@ def get_beta(densitySubPrefecture_filename,
 
     return beta
 
-################################################################################
+###############################################################################
 #
 # Function save_results
 #
-################################################################################
+###############################################################################
+
+
 def save_results(S, I, R, A, ES=None, EI=None, ER=None, directory='Results'):
     """
-    Save the result of the number of people in each different statesin in separate
-    files
+    Save the result of the number of people in each different statesin in separate files
     """
     if not os.path.exists(directory):
         os.makedirs(directory)
-    with open(directory+'/S.p', 'wb') as fp:
+    with open(directory + '/S.p', 'wb') as fp:
         p.dump(S, fp)
-    with open(directory+'/I.p', 'wb') as fp:
+    with open(directory + '/I.p', 'wb') as fp:
         p.dump(I, fp)
-    with open(directory+'/R.p', 'wb') as fp:
+    with open(directory + '/R.p', 'wb') as fp:
         p.dump(R, fp)
-    if ES
-        with open(directory+'/ES.p', 'wb') as fp:
+    if ES:
+        with open(directory + '/ES.p', 'wb') as fp:
             p.dump(ES, fp)
-    if EI
-        with open(directory+'/EI.p', 'wb') as fp:
+    if EI:
+        with open(directory + '/EI.p', 'wb') as fp:
             p.dump(EI, fp)
-    if ER
-        with open(directory+'/ER.p', 'wb') as fp:
+    if ER:
+        with open(directory + '/ER.p', 'wb') as fp:
             p.dump(ER, fp)
-    with open(directory+'/A.p', 'wb') as fp:
+    with open(directory + '/A.p', 'wb') as fp:
         p.dump(A, fp)
 
-################################################################################
+
+##############################################################################
 #
 # Function get_transition_probability
 #
-################################################################################
+##############################################################################
+
+
 def get_transition_probability(filename):
     with open(filename, "rb") as pickleFile:
         Tlist = p.load(pickleFile)
@@ -74,7 +88,7 @@ def get_transition_probability(filename):
     Tarray = Tarray * O
 
     with np.errstate(invalid='ignore'):
-        res1 = Tarray*(1/Tarray.sum(axis=1))
+        res1 = Tarray * (1 / Tarray.sum(axis=1))
 
     for i in xrange(255):
         for j in xrange(255):
@@ -83,17 +97,28 @@ def get_transition_probability(filename):
     #
     # Per Capita Leaving Rate
     #
-    res2 = Tarray.sum(axis=1)/Tarray.sum()
+    res2 = Tarray.sum(axis=1) / Tarray.sum()
     return res1, res2
 
-################################################################################
+
+###############################################################################
 #
 # Function compute_population_at_equilibrium
 #
-################################################################################
-def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population):
+###############################################################################
+
+
+def compute_population_at_equilibrium(
+        N0,
+        dim,
+        sigma,
+        nu,
+        rho,
+        total_population):
+
     N = np.zeros((dim, dim))
     for i in range(dim):
         Ni = np.sum(N0.reshape(dim, dim), axis=1)
-        N[i, :] = np.floor(population_at_equilibrum(i, sigma, nu, rho, Ni[i])*total_population)
+        N[i, :] = np.floor(
+            population_at_equilibrum(i, sigma, nu, rho, Ni[i]) * total_population)
     return N

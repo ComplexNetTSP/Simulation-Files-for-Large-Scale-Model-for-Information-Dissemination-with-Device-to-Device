@@ -31,16 +31,19 @@ __author__ = """\n""".join(['Vincent Gauthier <vgauthier@luxbulb.org>'])
 #
 
 import os
+import argparse
+
 import pickle as p
 import numpy as np
 
-import argparse
-
-from tau_leap_latent import population_at_equilibrum, stoc_eqs
 from progressbar import ProgressBar, Percentage, RotatingMarker, ETA, Bar
 
 # import global variables
 import properties
+
+# local import
+from utils import *
+from tau_leap_latent import population_at_equilibrum, stoc_eqs
 
 ################################################################################
 #
@@ -49,46 +52,46 @@ import properties
 ################################################################################
 
 
-def save_results(S, I, R, ES, EI, ER, A, directory='Results'):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    with open(directory+'/S.p', 'wb') as fp:
-        p.dump(S, fp)
-    with open(directory+'/I.p', 'wb') as fp:
-        p.dump(I, fp)
-    with open(directory+'/R.p', 'wb') as fp:
-        p.dump(R, fp)
-    with open(directory+'/ES.p', 'wb') as fp:
-        p.dump(ES, fp)
-    with open(directory+'/EI.p', 'wb') as fp:
-        p.dump(EI, fp)
-    with open(directory+'/ER.p', 'wb') as fp:
-        p.dump(ER, fp)
-    with open(directory+'/A.p', 'wb') as fp:
-        p.dump(A, fp)
+# def save_results(S, I, R, ES, EI, ER, A, directory='Results'):
+#     if not os.path.exists(directory):
+#         os.makedirs(directory)
+#     with open(directory+'/S.p', 'wb') as fp:
+#         p.dump(S, fp)
+#     with open(directory+'/I.p', 'wb') as fp:
+#         p.dump(I, fp)
+#     with open(directory+'/R.p', 'wb') as fp:
+#         p.dump(R, fp)
+#     with open(directory+'/ES.p', 'wb') as fp:
+#         p.dump(ES, fp)
+#     with open(directory+'/EI.p', 'wb') as fp:
+#         p.dump(EI, fp)
+#     with open(directory+'/ER.p', 'wb') as fp:
+#         p.dump(ER, fp)
+#     with open(directory+'/A.p', 'wb') as fp:
+#         p.dump(A, fp)
 
-def get_beta(densitySubPrefecture_filename,
-             polygonPointsSubPrefecture_filename,
-             subPrefectureNumbering_filename,
-             r,
-             c):
-
-    with open(densitySubPrefecture_filename, "rb") as pickleFile:
-        RhoPolygons = p.load(pickleFile)
-    with open(polygonPointsSubPrefecture_filename, "rb") as pickleFile:
-        PolygonPoints = p.load(pickleFile)
-        community = len(PolygonPoints.keys())
-        listing = PolygonPoints.keys()
-    with open(subPrefectureNumbering_filename, "rb") as pickleFile:
-        ConnectionNumber = p.load(pickleFile)
-
-    beta = np.zeros(community)
-    k = np.zeros(255)
-    for i in listing:
-      k = RhoPolygons[i]*(np.pi)*r**2
-      beta[ConnectionNumber[i]-1] = -k*np.log(1-c[ConnectionNumber[i]-1])
-
-    return beta
+# def get_beta(densitySubPrefecture_filename,
+#              polygonPointsSubPrefecture_filename,
+#              subPrefectureNumbering_filename,
+#              r,
+#              c):
+#
+#     with open(densitySubPrefecture_filename, "rb") as pickleFile:
+#         RhoPolygons = p.load(pickleFile)
+#     with open(polygonPointsSubPrefecture_filename, "rb") as pickleFile:
+#         PolygonPoints = p.load(pickleFile)
+#         community = len(PolygonPoints.keys())
+#         listing = PolygonPoints.keys()
+#     with open(subPrefectureNumbering_filename, "rb") as pickleFile:
+#         ConnectionNumber = p.load(pickleFile)
+#
+#     beta = np.zeros(community)
+#     k = np.zeros(255)
+#     for i in listing:
+#       k = RhoPolygons[i]*(np.pi)*r**2
+#       beta[ConnectionNumber[i]-1] = -k*np.log(1-c[ConnectionNumber[i]-1])
+#
+#     return beta
 
 
 def initial_population(areaSubPrefecture_filename,
@@ -107,35 +110,34 @@ def initial_population(areaSubPrefecture_filename,
         listing = PolygonPoints.keys()
     with open(subPrefectureNumbering_filename, "rb") as pickleFile:
         ConnectionNumber = p.load(pickleFile)
-        #print ConnectionNumber
     N0 = np.zeros(community)
     for i in listing:
         N0[ConnectionNumber[i]-1] = AreaPolygons[i]*RhoPolygons[i]/float(Totalpopulation)
     return np.identity(community)*N0
 
 
-def get_transition_probability(filename):
-    with open(filename, "rb") as pickleFile:
-        Tlist = p.load(pickleFile)
-    #
-    # Transition Probability
-    #
-    Tarray = np.array(Tlist, dtype=np.float)
-    O = np.ones((255, 255)) - np.identity(255)
-    Tarray = Tarray * O
-
-    with np.errstate(invalid='ignore'):
-        res1 = Tarray*(1/Tarray.sum(axis=1))
-
-    for i in xrange(255):
-        for j in xrange(255):
-            if np.isnan(res1[i, j]):
-                res1[i, j] = 0.0
-    #
-    # Per Capita Leaving Rate
-    #
-    res2 = Tarray.sum(axis=1)/Tarray.sum()
-    return res1, res2
+# def get_transition_probability(filename):
+#     with open(filename, "rb") as pickleFile:
+#         Tlist = p.load(pickleFile)
+#     #
+#     # Transition Probability
+#     #
+#     Tarray = np.array(Tlist, dtype=np.float)
+#     O = np.ones((255, 255)) - np.identity(255)
+#     Tarray = Tarray * O
+#
+#     with np.errstate(invalid='ignore'):
+#         res1 = Tarray*(1/Tarray.sum(axis=1))
+#
+#     for i in xrange(255):
+#         for j in xrange(255):
+#             if np.isnan(res1[i, j]):
+#                 res1[i, j] = 0.0
+#     #
+#     # Per Capita Leaving Rate
+#     #
+#     res2 = Tarray.sum(axis=1)/Tarray.sum()
+#     return res1, res2
 
 def rate_of_return(dim, rate, Khi, degree_filename):
     with open(degree_filename, 'rb') as pickleFile:
@@ -153,13 +155,12 @@ def rate_of_return(dim, rate, Khi, degree_filename):
             rho[i, j] = 1.0/((1.0/rate)*(k[j]**Khi)/(kmean**Khi))
     return rho
 
-
-def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population):
-    N = np.zeros((dim, dim))
-    for i in range(dim):
-        Ni = np.sum(N0.reshape(dim, dim), axis=1)
-        N[i, :] = np.floor(population_at_equilibrum(i, sigma, nu, rho, Ni[i])*total_population)
-    return N
+# def compute_population_at_equilibrium(N0, dim, sigma, nu, rho, total_population):
+#     N = np.zeros((dim, dim))
+#     for i in range(dim):
+#         Ni = np.sum(N0.reshape(dim, dim), axis=1)
+#         N[i, :] = np.floor(population_at_equilibrum(i, sigma, nu, rho, Ni[i])*total_population)
+#     return N
 
 #
 # MAIN FUNCTION THAT RUN THE SIMULATION
