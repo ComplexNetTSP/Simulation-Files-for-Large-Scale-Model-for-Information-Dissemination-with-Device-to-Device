@@ -55,8 +55,10 @@ optional arguments:
 --sim-id SIM_ID      simulation step (fraction of day)
 --cell-id CELL_ID    initial cellID
 ```
-#####Example of SIR Simulation with latent states
+##### Example of SIR Simulation with latent states
 
 ```shell
 $ python simulation_latent.py --output ./output/latent/ --duration 7 --tau 0.1 --cell-id 0 --sim-id 1 --mu 0.3
 ```
+##### Sample output of simulation.py
+![alt-tag](https://github.com/ComplexNetTSP/Simulation-Files-for-Large-Scale-Model-for-Information-Dissemination-with-Device-to-Device/blob/master/images/diffusion1.png)
