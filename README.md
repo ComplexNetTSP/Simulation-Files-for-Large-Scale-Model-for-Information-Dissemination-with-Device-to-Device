@@ -20,6 +20,13 @@ Their is three different simulation available in this package:
 2. **simulation_latent.py**: a simple SIR simulation with latent states
 3. **simulation_latent_heterogeneous.py**: a simple SIR simulation with latent states and heterogeneous return probability
 
+##### Requirements
+```
+1. pyshp
+2. progressbar
+3. pickle
+4. numpy
+```
 ##### Install
 ```shell
 $ tar zxvf archive.tar.gz
