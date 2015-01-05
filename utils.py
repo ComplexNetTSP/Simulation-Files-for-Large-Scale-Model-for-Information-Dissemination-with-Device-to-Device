@@ -48,7 +48,8 @@ def get_beta(densitySubPrefecture_filename,
 
 def save_results(S, I, R, A, ES=None, EI=None, ER=None, directory='Results'):
     """
-    Save the result of the number of people in each different statesin in separate files
+    Save the result of the number of people in each different states
+    in in separate files
     """
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -58,13 +59,13 @@ def save_results(S, I, R, A, ES=None, EI=None, ER=None, directory='Results'):
         p.dump(I, fp)
     with open(directory + '/R.p', 'wb') as fp:
         p.dump(R, fp)
-    if ES:
+    if type(ES) != None:
         with open(directory + '/ES.p', 'wb') as fp:
             p.dump(ES, fp)
-    if EI:
+    if type(EI) != None:
         with open(directory + '/EI.p', 'wb') as fp:
             p.dump(EI, fp)
-    if ER:
+    if type(ER) != None:
         with open(directory + '/ER.p', 'wb') as fp:
             p.dump(ER, fp)
     with open(directory + '/A.p', 'wb') as fp:
