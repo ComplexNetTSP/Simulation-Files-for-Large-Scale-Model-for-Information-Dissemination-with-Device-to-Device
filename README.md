@@ -4,7 +4,7 @@ SIR model with Gillespie (Tau-leap) algorithm [![Zenodo](https://zenodo.org/badg
 
 #### References
 
-> *Rachit Agarwal, Vincent Gauthier, Monique Becker, Thouraya Toukabrigunes,   Hossam Afifi*, **"Large Scale Model for Information Dissemination with Device to Device Communication using Call Details Records"**, In Press, Compter Communication, 2015.
+> *Agarwal, R., Gauthier, V., Becker, M., Toukabrigunes, T., & Afifi, H.* (2015). **Large scale model for information dissemination with device to device communication using call details records**. Computer Communications, 59, 1–11. [DOI: 10.1016/j.comcom.2014.12.010](https://doi.org/10.1016/j.comcom.2014.12.010)
 
 #### Abstract
 
